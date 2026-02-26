@@ -79,6 +79,29 @@ export class ReportsController {
   }
 
   // --------------------------------------------------------------------------
+  // GET /reports/cost-summary?from=&to=&locationId=
+  // --------------------------------------------------------------------------
+
+  @Get('cost-summary')
+  @Roles(Role.ADMIN, Role.HEAD_CHEF)
+  @ApiOperation({
+    summary: 'Resumen de costos por categoria y tendencia semanal',
+    description:
+      'Calcula costos totales y desglosados por categoria usando el consumo semanal y costos unitarios.',
+  })
+  @ApiQuery({ name: 'from', required: true, example: '2025-01-01' })
+  @ApiQuery({ name: 'to', required: true, example: '2025-03-31' })
+  @ApiQuery({ name: 'locationId', required: false })
+  @ApiResponse({ status: 200, description: 'Resumen de costos' })
+  getCostSummary(
+    @Query('from') from: string,
+    @Query('to') to: string,
+    @Query('locationId') locationId?: string,
+  ) {
+    return this.reportsService.getCostSummary(from, to, locationId);
+  }
+
+  // --------------------------------------------------------------------------
   // GET /reports/consumption?stationId=&from=&to=
   // --------------------------------------------------------------------------
 

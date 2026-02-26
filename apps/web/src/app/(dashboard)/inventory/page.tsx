@@ -12,6 +12,7 @@ import {
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
+import { useOnlineStatus } from "@/lib/use-online-status";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -51,7 +52,8 @@ type CountMap = Record<string, number | "">;
 
 export default function InventoryPage() {
   const { user } = useAuth();
-  const { success, error: showError } = useToast();
+  const isOnline = useOnlineStatus();
+  const { success, error: showError, info } = useToast();
 
   const [stations, setStations] = useState<Station[]>([]);
   const [selectedStation, setSelectedStation] = useState<string>("");
@@ -193,6 +195,11 @@ export default function InventoryPage() {
     }
 
     const today = new Date().toISOString().slice(0, 10);
+
+    if (!isOnline) {
+      info("Sin conexion. El conteo se guardara en cola y se sincronizara cuando vuelvas a tener internet.", 5000);
+      return;
+    }
 
     setIsSaving(true);
     try {

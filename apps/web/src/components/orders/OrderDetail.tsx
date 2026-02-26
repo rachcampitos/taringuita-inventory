@@ -7,8 +7,10 @@ import {
   Send,
   XCircle,
   FileText,
+  FileSpreadsheet,
+  Download,
 } from "lucide-react";
-import { api, ApiError } from "@/lib/api";
+import { api, ApiError, getAccessToken } from "@/lib/api";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -85,6 +87,40 @@ export function OrderDetail({ order, onBack, onRefresh, isAdmin }: OrderDetailPr
     }
   }
 
+  async function handleExport(format: "pdf" | "excel") {
+    const BASE_URL =
+      process.env.NEXT_PUBLIC_API_URL ||
+      (typeof window !== "undefined" ? "/api" : "http://localhost:4000/api");
+    const ext = format === "pdf" ? "pdf" : "xlsx";
+    const mime =
+      format === "pdf"
+        ? "application/pdf"
+        : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+    try {
+      const token = getAccessToken();
+      const response = await fetch(
+        `${BASE_URL}/orders/${order.id}/export/${format}`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+
+      if (!response.ok) throw new Error("Error al exportar");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `pedido-${order.id.slice(0, 8)}.${ext}`;
+      link.click();
+      URL.revokeObjectURL(url);
+      success(`Pedido exportado como ${format.toUpperCase()}`);
+    } catch {
+      showError(`Error al exportar ${format.toUpperCase()}`);
+    }
+  }
+
   async function handleStatusChange(newStatus: string) {
     setUpdating(true);
     try {
@@ -132,25 +168,29 @@ export function OrderDetail({ order, onBack, onRefresh, isAdmin }: OrderDetailPr
       </div>
 
       {/* Action buttons */}
-      {isAdmin && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {isDraft && (
-            <Button variant="primary" size="sm" onClick={() => handleStatusChange("CONFIRMED")} disabled={updating}>
-              <CheckCircle2 size={16} /> Confirmar pedido
-            </Button>
-          )}
-          {order.status === "CONFIRMED" && (
-            <Button variant="primary" size="sm" onClick={() => handleStatusChange("SENT")} disabled={updating}>
-              <Send size={16} /> Enviar al bodeguero
-            </Button>
-          )}
-          {(isDraft || order.status === "CONFIRMED") && (
-            <Button variant="ghost" size="sm" onClick={() => handleStatusChange("CANCELLED")} disabled={updating}>
-              <XCircle size={16} /> Cancelar
-            </Button>
-          )}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {isAdmin && isDraft && (
+          <Button variant="primary" size="sm" onClick={() => handleStatusChange("CONFIRMED")} disabled={updating}>
+            <CheckCircle2 size={16} /> Confirmar pedido
+          </Button>
+        )}
+        {isAdmin && order.status === "CONFIRMED" && (
+          <Button variant="primary" size="sm" onClick={() => handleStatusChange("SENT")} disabled={updating}>
+            <Send size={16} /> Enviar al bodeguero
+          </Button>
+        )}
+        <Button variant="secondary" size="sm" onClick={() => handleExport("pdf")}>
+          <FileText size={16} /> PDF
+        </Button>
+        <Button variant="secondary" size="sm" onClick={() => handleExport("excel")}>
+          <FileSpreadsheet size={16} /> Excel
+        </Button>
+        {isAdmin && (isDraft || order.status === "CONFIRMED") && (
+          <Button variant="ghost" size="sm" onClick={() => handleStatusChange("CANCELLED")} disabled={updating}>
+            <XCircle size={16} /> Cancelar
+          </Button>
+        )}
+      </div>
 
       {/* Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">

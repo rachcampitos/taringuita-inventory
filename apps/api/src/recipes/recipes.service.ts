@@ -1,0 +1,297 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateRecipeDto } from './dto/create-recipe.dto';
+import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { AddIngredientDto, UpdateIngredientDto } from './dto/add-ingredient.dto';
+
+const RECIPE_SELECT = {
+  id: true,
+  name: true,
+  outputProductId: true,
+  outputProduct: {
+    select: { id: true, code: true, name: true, unitOfMeasure: true },
+  },
+  outputQuantity: true,
+  instructions: true,
+  createdAt: true,
+  updatedAt: true,
+  _count: { select: { ingredients: true } },
+} as const;
+
+const RECIPE_DETAIL_SELECT = {
+  id: true,
+  name: true,
+  outputProductId: true,
+  outputProduct: {
+    select: { id: true, code: true, name: true, unitOfMeasure: true },
+  },
+  outputQuantity: true,
+  instructions: true,
+  createdAt: true,
+  updatedAt: true,
+  ingredients: {
+    select: {
+      id: true,
+      productId: true,
+      product: {
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          unitOfMeasure: true,
+          unitCost: true,
+        },
+      },
+      quantity: true,
+    },
+    orderBy: { product: { name: 'asc' as const } },
+  },
+} as const;
+
+@Injectable()
+export class RecipesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(dto: CreateRecipeDto) {
+    return this.prisma.recipe.create({
+      data: {
+        name: dto.name,
+        outputProductId: dto.outputProductId,
+        outputQuantity: dto.outputQuantity,
+        instructions: dto.instructions ?? null,
+        ...(dto.ingredients?.length
+          ? {
+              ingredients: {
+                create: dto.ingredients.map((i) => ({
+                  productId: i.productId,
+                  quantity: i.quantity,
+                })),
+              },
+            }
+          : {}),
+      },
+      select: RECIPE_DETAIL_SELECT,
+    });
+  }
+
+  async findAll(query: { page?: number; limit?: number; search?: string }) {
+    const { page = 1, limit = 20, search } = query;
+    const take = Math.min(limit, 100);
+    const skip = (page - 1) * take;
+
+    const where = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' as const } },
+            {
+              outputProduct: {
+                name: { contains: search, mode: 'insensitive' as const },
+              },
+            },
+          ],
+        }
+      : {};
+
+    const [total, data] = await this.prisma.$transaction([
+      this.prisma.recipe.count({ where }),
+      this.prisma.recipe.findMany({
+        where,
+        select: RECIPE_SELECT,
+        orderBy: { name: 'asc' },
+        skip,
+        take,
+      }),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit: take,
+        lastPage: Math.ceil(total / take),
+      },
+    };
+  }
+
+  async findOne(id: string) {
+    const recipe = await this.prisma.recipe.findUnique({
+      where: { id },
+      select: RECIPE_DETAIL_SELECT,
+    });
+
+    if (!recipe) {
+      throw new NotFoundException(`Receta con id "${id}" no encontrada`);
+    }
+
+    return recipe;
+  }
+
+  async update(id: string, dto: UpdateRecipeDto) {
+    await this.ensureExists(id);
+
+    return this.prisma.recipe.update({
+      where: { id },
+      data: {
+        ...(dto.name !== undefined ? { name: dto.name } : {}),
+        ...(dto.instructions !== undefined ? { instructions: dto.instructions } : {}),
+        ...(dto.outputQuantity !== undefined ? { outputQuantity: dto.outputQuantity } : {}),
+      },
+      select: RECIPE_DETAIL_SELECT,
+    });
+  }
+
+  async remove(id: string) {
+    await this.ensureExists(id);
+
+    return this.prisma.recipe.delete({
+      where: { id },
+      select: { id: true, name: true },
+    });
+  }
+
+  async addIngredient(recipeId: string, dto: AddIngredientDto) {
+    await this.ensureExists(recipeId);
+
+    return this.prisma.recipeIngredient.create({
+      data: {
+        recipeId,
+        productId: dto.productId,
+        quantity: dto.quantity,
+      },
+      select: {
+        id: true,
+        productId: true,
+        product: {
+          select: {
+            id: true,
+            code: true,
+            name: true,
+            unitOfMeasure: true,
+            unitCost: true,
+          },
+        },
+        quantity: true,
+      },
+    });
+  }
+
+  async updateIngredient(recipeId: string, ingredientId: string, dto: UpdateIngredientDto) {
+    await this.ensureExists(recipeId);
+
+    const ingredient = await this.prisma.recipeIngredient.findFirst({
+      where: { id: ingredientId, recipeId },
+    });
+
+    if (!ingredient) {
+      throw new NotFoundException(`Ingrediente con id "${ingredientId}" no encontrado`);
+    }
+
+    return this.prisma.recipeIngredient.update({
+      where: { id: ingredientId },
+      data: { quantity: dto.quantity },
+      select: {
+        id: true,
+        productId: true,
+        product: {
+          select: {
+            id: true,
+            code: true,
+            name: true,
+            unitOfMeasure: true,
+            unitCost: true,
+          },
+        },
+        quantity: true,
+      },
+    });
+  }
+
+  async removeIngredient(recipeId: string, ingredientId: string) {
+    await this.ensureExists(recipeId);
+
+    const ingredient = await this.prisma.recipeIngredient.findFirst({
+      where: { id: ingredientId, recipeId },
+    });
+
+    if (!ingredient) {
+      throw new NotFoundException(`Ingrediente con id "${ingredientId}" no encontrado`);
+    }
+
+    return this.prisma.recipeIngredient.delete({
+      where: { id: ingredientId },
+      select: { id: true },
+    });
+  }
+
+  async calculateCost(id: string) {
+    const recipe = await this.prisma.recipe.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        outputQuantity: true,
+        ingredients: {
+          select: {
+            id: true,
+            quantity: true,
+            product: {
+              select: {
+                id: true,
+                code: true,
+                name: true,
+                unitOfMeasure: true,
+                unitCost: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!recipe) {
+      throw new NotFoundException(`Receta con id "${id}" no encontrada`);
+    }
+
+    const breakdown = recipe.ingredients.map((ing) => {
+      const unitCost = ing.product.unitCost ? Number(ing.product.unitCost) : 0;
+      const qty = Number(ing.quantity);
+      const lineCost = unitCost * qty;
+
+      return {
+        ingredientId: ing.id,
+        productId: ing.product.id,
+        productName: ing.product.name,
+        productCode: ing.product.code,
+        unitOfMeasure: ing.product.unitOfMeasure,
+        quantity: qty,
+        unitCost,
+        lineCost,
+      };
+    });
+
+    const totalCost = breakdown.reduce((sum, b) => sum + b.lineCost, 0);
+    const costPerUnit = Number(recipe.outputQuantity) > 0
+      ? totalCost / Number(recipe.outputQuantity)
+      : 0;
+
+    return {
+      recipeId: recipe.id,
+      recipeName: recipe.name,
+      outputQuantity: Number(recipe.outputQuantity),
+      totalCost,
+      costPerUnit,
+      breakdown,
+    };
+  }
+
+  private async ensureExists(id: string) {
+    const recipe = await this.prisma.recipe.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!recipe) {
+      throw new NotFoundException(`Receta con id "${id}" no encontrada`);
+    }
+  }
+}

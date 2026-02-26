@@ -47,12 +47,26 @@ export interface LowStockAlert {
   minStock: number;
 }
 
+export interface CostSummaryBrief {
+  totalCostThisWeek: number;
+  totalCostLastWeek: number;
+  costTrend: number;
+}
+
+export interface OrdersSummaryBrief {
+  pendingOrders: number;
+  lastOrderDate: string | null;
+  totalOrdersThisMonth: number;
+}
+
 export interface DashboardData {
   date: string;
   todayStatus: TodayStatus;
   inventorySummary: InventorySummaryItem[];
   productionSummary: ProductionSummaryItem[];
   lowStockAlerts: LowStockAlert[];
+  costSummary: CostSummaryBrief;
+  ordersSummary: OrdersSummaryBrief;
 }
 
 export interface ConsumptionRow {
@@ -178,6 +192,61 @@ export class ReportsService {
     // ------------------------------------------------------------------
     const lowStockAlerts = await this.buildLowStockAlerts(organizationId);
 
+    // ------------------------------------------------------------------
+    // 6. Cost summary (this week vs last week)
+    // ------------------------------------------------------------------
+    const stationIds = stations.map((s) => s.id);
+    const weekAgo = new Date(todayDate);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const twoWeeksAgo = new Date(todayDate);
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+    const [thisWeekConsumptions, lastWeekConsumptions] = await Promise.all([
+      this.prisma.weeklyConsumption.findMany({
+        where: { stationId: { in: stationIds }, weekStart: { gte: weekAgo } },
+        select: { consumption: true, product: { select: { unitCost: true } } },
+      }),
+      this.prisma.weeklyConsumption.findMany({
+        where: {
+          stationId: { in: stationIds },
+          weekStart: { gte: twoWeeksAgo, lt: weekAgo },
+        },
+        select: { consumption: true, product: { select: { unitCost: true } } },
+      }),
+    ]);
+
+    const totalCostThisWeek = thisWeekConsumptions.reduce((sum, c) => {
+      const cost = c.product.unitCost ? Number(c.product.unitCost) : 0;
+      return sum + Number(c.consumption) * cost;
+    }, 0);
+
+    const totalCostLastWeek = lastWeekConsumptions.reduce((sum, c) => {
+      const cost = c.product.unitCost ? Number(c.product.unitCost) : 0;
+      return sum + Number(c.consumption) * cost;
+    }, 0);
+
+    const costTrend = totalCostLastWeek > 0
+      ? Math.round(((totalCostThisWeek - totalCostLastWeek) / totalCostLastWeek) * 100)
+      : 0;
+
+    // ------------------------------------------------------------------
+    // 7. Orders summary
+    // ------------------------------------------------------------------
+    const monthStart = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
+
+    const [pendingOrders, lastOrder, totalOrdersThisMonth] = await Promise.all([
+      this.prisma.orderRequest.count({
+        where: { status: { in: ['DRAFT', 'CONFIRMED', 'SENT'] } },
+      }),
+      this.prisma.orderRequest.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true },
+      }),
+      this.prisma.orderRequest.count({
+        where: { createdAt: { gte: monthStart } },
+      }),
+    ]);
+
     return {
       date: todayStr,
       todayStatus: {
@@ -188,6 +257,16 @@ export class ReportsService {
       inventorySummary,
       productionSummary,
       lowStockAlerts,
+      costSummary: {
+        totalCostThisWeek: Math.round(totalCostThisWeek),
+        totalCostLastWeek: Math.round(totalCostLastWeek),
+        costTrend,
+      },
+      ordersSummary: {
+        pendingOrders,
+        lastOrderDate: lastOrder?.createdAt.toISOString() ?? null,
+        totalOrdersThisMonth,
+      },
     };
   }
 
@@ -395,6 +474,94 @@ export class ReportsService {
       from,
       to,
       trend,
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /reports/cost-summary?from=&to=&locationId=
+  // --------------------------------------------------------------------------
+
+  async getCostSummary(
+    from: string,
+    to: string,
+    locationId?: string,
+  ): Promise<{
+    totalCost: number;
+    byCategory: { categoryName: string; totalCost: number; productCount: number }[];
+    weeklyTrend: { weekStart: string; totalCost: number }[];
+  }> {
+    const fromDate = parseDateOnly(from);
+    const toDate = parseDateOnly(to);
+
+    const stationWhere = locationId
+      ? { locationId }
+      : {};
+
+    // Get weekly consumptions in range
+    const consumptions = await this.prisma.weeklyConsumption.findMany({
+      where: {
+        weekStart: { gte: fromDate },
+        weekEnd: { lte: toDate },
+        station: stationWhere,
+      },
+      select: {
+        consumption: true,
+        weekStart: true,
+        product: {
+          select: {
+            unitCost: true,
+            category: { select: { name: true } },
+          },
+        },
+      },
+    });
+
+    // By category
+    const catMap = new Map<string, { totalCost: number; productIds: Set<string> }>();
+    let totalCost = 0;
+
+    for (const c of consumptions) {
+      const cost = c.product.unitCost ? Number(c.product.unitCost) : 0;
+      const lineCost = Number(c.consumption) * cost;
+      totalCost += lineCost;
+
+      const catName = c.product.category.name;
+      if (!catMap.has(catName)) {
+        catMap.set(catName, { totalCost: 0, productIds: new Set() });
+      }
+      const cat = catMap.get(catName)!;
+      cat.totalCost += lineCost;
+      cat.productIds.add(catName); // count unique
+    }
+
+    const byCategory = [...catMap.entries()]
+      .map(([categoryName, data]) => ({
+        categoryName,
+        totalCost: Math.round(data.totalCost * 100) / 100,
+        productCount: data.productIds.size,
+      }))
+      .sort((a, b) => b.totalCost - a.totalCost);
+
+    // Weekly trend
+    const weekMap = new Map<string, number>();
+    for (const c of consumptions) {
+      const weekKey = c.weekStart.toISOString().slice(0, 10);
+      const cost = c.product.unitCost ? Number(c.product.unitCost) : 0;
+      const lineCost = Number(c.consumption) * cost;
+      weekMap.set(weekKey, (weekMap.get(weekKey) ?? 0) + lineCost);
+    }
+
+    const weeklyTrend = [...weekMap.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([weekStart, wCost]) => ({
+        weekStart,
+        totalCost: Math.round(wCost * 100) / 100,
+      }));
+
+    return {
+      totalCost: Math.round(totalCost * 100) / 100,
+      byCategory,
+      weeklyTrend,
     };
   }
 

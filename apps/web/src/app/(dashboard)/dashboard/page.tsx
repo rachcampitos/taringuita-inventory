@@ -8,7 +8,13 @@ import {
   AlertTriangle,
   RefreshCw,
   TrendingDown,
+  DollarSign,
+  ShoppingCart,
+  BarChart3,
+  ArrowUpRight,
+  ArrowDownRight,
 } from "lucide-react";
+import Link from "next/link";
 import { api, ApiError } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -49,6 +55,16 @@ interface DashboardResponse {
   inventorySummary: InventoryStation[];
   productionSummary: ProductionStation[];
   lowStockAlerts: LowStockAlert[];
+  costSummary: {
+    totalCostThisWeek: number;
+    totalCostLastWeek: number;
+    costTrend: number;
+  };
+  ordersSummary: {
+    pendingOrders: number;
+    lastOrderDate: string | null;
+    totalOrdersThisMonth: number;
+  };
 }
 
 function StatCard({
@@ -207,6 +223,82 @@ export default function DashboardPage() {
             />
           </>
         )}
+      </div>
+
+      {/* Cost & Orders row */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-6">
+        {isLoading && !data ? (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        ) : (
+          <>
+            <Card padding="md">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Costo semanal</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-1">
+                    ${(data?.costSummary.totalCostThisWeek ?? 0).toLocaleString("es-CL")}
+                  </p>
+                  {data?.costSummary.costTrend !== 0 && (
+                    <p className={[
+                      "text-xs mt-1 flex items-center gap-0.5",
+                      (data?.costSummary.costTrend ?? 0) > 0
+                        ? "text-red-500"
+                        : "text-emerald-500",
+                    ].join(" ")}>
+                      {(data?.costSummary.costTrend ?? 0) > 0
+                        ? <ArrowUpRight size={12} />
+                        : <ArrowDownRight size={12} />}
+                      {Math.abs(data?.costSummary.costTrend ?? 0)}% vs semana anterior
+                    </p>
+                  )}
+                </div>
+                <div className="p-2.5 rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-950 dark:text-purple-400">
+                  <DollarSign size={22} />
+                </div>
+              </div>
+            </Card>
+            <StatCard
+              label="Pedidos pendientes"
+              value={data?.ordersSummary.pendingOrders ?? 0}
+              sublabel={`${data?.ordersSummary.totalOrdersThisMonth ?? 0} este mes`}
+              icon={ShoppingCart}
+              iconClass="bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400"
+            />
+            <Card padding="md">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Ultimo pedido</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-slate-100 mt-1">
+                    {data?.ordersSummary.lastOrderDate
+                      ? new Date(data.ordersSummary.lastOrderDate).toLocaleDateString("es-CL")
+                      : "Sin pedidos"}
+                  </p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-gray-100 text-gray-400 dark:bg-slate-700 dark:text-slate-500">
+                  <Clock size={22} />
+                </div>
+              </div>
+            </Card>
+          </>
+        )}
+      </div>
+
+      {/* Quick actions */}
+      <div className="flex flex-wrap gap-3 mb-6">
+        <Link href="/orders">
+          <Button variant="secondary" size="sm">
+            <ShoppingCart size={14} /> Generar pedido
+          </Button>
+        </Link>
+        <Link href="/reports">
+          <Button variant="secondary" size="sm">
+            <BarChart3 size={14} /> Ver reportes
+          </Button>
+        </Link>
       </div>
 
       {error && (

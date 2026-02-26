@@ -4,6 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DeliveryDay, OrderStatus, Prisma } from '@prisma/client';
+import * as PDFDocument from 'pdfkit';
+import * as ExcelJS from 'exceljs';
 import { PrismaService } from '../prisma/prisma.service';
 import { GenerateOrderDto } from './dto/generate-order.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
@@ -561,5 +563,184 @@ export class OrdersService {
     });
 
     return data;
+  }
+
+  // ------------------------------------------------------------------
+  // PDF Export
+  // ------------------------------------------------------------------
+
+  async generatePdf(id: string): Promise<Buffer> {
+    const exportData = await this.exportOrder(id);
+
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument({ size: 'LETTER', margin: 50 });
+      const chunks: Buffer[] = [];
+
+      doc.on('data', (chunk: Buffer) => chunks.push(chunk));
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+
+      const DELIVERY_LABELS: Record<string, string> = {
+        LUNES: 'Lunes', MARTES: 'Martes', MIERCOLES: 'Miercoles',
+        JUEVES: 'Jueves', VIERNES: 'Viernes',
+      };
+      const STATUS_LABELS: Record<string, string> = {
+        DRAFT: 'Borrador', CONFIRMED: 'Confirmado', SENT: 'Enviado',
+        RECEIVED: 'Recibido', CANCELLED: 'Cancelado',
+      };
+
+      // Header
+      doc.font('Helvetica-Bold').fontSize(18).text(`Pedido - ${exportData.order.location.name}`, { align: 'center' });
+      doc.moveDown(0.5);
+      doc.font('Helvetica').fontSize(10)
+        .text(`Fecha: ${new Date(exportData.order.requestDate).toLocaleDateString('es-CL')}`)
+        .text(`Entrega: ${DELIVERY_LABELS[exportData.order.deliveryDay] ?? exportData.order.deliveryDay}`)
+        .text(`Estado: ${STATUS_LABELS[exportData.order.status] ?? exportData.order.status}`);
+      if (exportData.order.notes) {
+        doc.text(`Notas: ${exportData.order.notes}`);
+      }
+      doc.moveDown(1);
+
+      // Table per category
+      for (const cat of exportData.categories) {
+        // Check if we need a new page
+        if (doc.y > 650) doc.addPage();
+
+        doc.font('Helvetica-Bold').fontSize(12).text(cat.category, { underline: true });
+        doc.moveDown(0.3);
+
+        // Table header
+        const tableTop = doc.y;
+        const colX = [50, 110, 280, 340, 395, 445, 500];
+        doc.font('Helvetica-Bold').fontSize(8);
+        doc.text('Codigo', colX[0], tableTop);
+        doc.text('Producto', colX[1], tableTop);
+        doc.text('Unidad', colX[2], tableTop);
+        doc.text('Cant.', colX[3], tableTop);
+        doc.text('C.Unit', colX[4], tableTop);
+        doc.text('Subtotal', colX[5], tableTop);
+
+        doc.moveTo(50, tableTop + 12).lineTo(560, tableTop + 12).stroke();
+        let rowY = tableTop + 16;
+
+        doc.font('Helvetica').fontSize(8);
+        for (const item of cat.items) {
+          if (rowY > 720) {
+            doc.addPage();
+            rowY = 50;
+          }
+          const qty = Number(item.confirmedQty ?? item.suggestedQty);
+          const cost = item.unitCost ? Number(item.unitCost) : 0;
+          const subtotal = qty * cost;
+
+          doc.text(item.product.code, colX[0], rowY, { width: 55 });
+          doc.text(item.product.name, colX[1], rowY, { width: 165 });
+          doc.text(item.product.unitOfOrder, colX[2], rowY);
+          doc.text(String(qty), colX[3], rowY);
+          doc.text(cost > 0 ? `$${cost.toLocaleString('es-CL')}` : '-', colX[4], rowY);
+          doc.text(subtotal > 0 ? `$${subtotal.toLocaleString('es-CL')}` : '-', colX[5], rowY);
+          rowY += 14;
+        }
+
+        doc.moveDown(0.5);
+        doc.font('Helvetica').fontSize(9)
+          .text(`Subtotal categoria: $${cat.subtotal.toLocaleString('es-CL')}`, { align: 'right' });
+        doc.moveDown(0.8);
+      }
+
+      // Footer
+      doc.moveDown(1);
+      doc.moveTo(50, doc.y).lineTo(560, doc.y).stroke();
+      doc.moveDown(0.5);
+      doc.font('Helvetica-Bold').fontSize(11);
+      doc.text(`Total items: ${exportData.totalItems}`, 50);
+      doc.text(`Costo total estimado: $${exportData.totalEstimated.toLocaleString('es-CL')}`, 50);
+
+      doc.end();
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Excel Export
+  // ------------------------------------------------------------------
+
+  async generateExcel(id: string): Promise<Buffer> {
+    const exportData = await this.exportOrder(id);
+    const order = await this.findOne(id);
+
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Pedido');
+
+    // Header style
+    const headerFill: ExcelJS.Fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF059669' },
+    };
+    const headerFont: Partial<ExcelJS.Font> = {
+      bold: true,
+      color: { argb: 'FFFFFFFF' },
+      size: 10,
+    };
+
+    // Columns
+    sheet.columns = [
+      { header: 'Categoria', key: 'category', width: 20 },
+      { header: 'Codigo', key: 'code', width: 12 },
+      { header: 'Producto', key: 'name', width: 30 },
+      { header: 'Und Medida', key: 'unitOfMeasure', width: 12 },
+      { header: 'Und Pedido', key: 'unitOfOrder', width: 12 },
+      { header: 'Stock', key: 'currentStock', width: 10 },
+      { header: 'Consumo', key: 'consumption', width: 10 },
+      { header: 'Sugerido', key: 'suggested', width: 10 },
+      { header: 'Confirmado', key: 'confirmed', width: 12 },
+      { header: 'Costo', key: 'unitCost', width: 12 },
+      { header: 'Subtotal', key: 'subtotal', width: 14 },
+    ];
+
+    // Style header row
+    const headerRow = sheet.getRow(1);
+    headerRow.eachCell((cell) => {
+      cell.fill = headerFill;
+      cell.font = headerFont;
+      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+    });
+    headerRow.height = 24;
+
+    // Data rows
+    for (const item of order.items) {
+      const qty = Number(item.confirmedQty ?? item.suggestedQty);
+      const cost = item.unitCost ? Number(item.unitCost) : 0;
+
+      sheet.addRow({
+        category: item.product.category.name,
+        code: item.product.code,
+        name: item.product.name,
+        unitOfMeasure: item.product.unitOfMeasure,
+        unitOfOrder: item.unitOfOrder,
+        currentStock: Number(item.currentStock),
+        consumption: Number(item.weeklyAvgConsumption),
+        suggested: Number(item.suggestedQty),
+        confirmed: item.confirmedQty != null ? Number(item.confirmedQty) : '',
+        unitCost: cost,
+        subtotal: qty * cost,
+      });
+    }
+
+    // Totals row
+    const lastRow = sheet.lastRow ? sheet.lastRow.number + 1 : 2;
+    const totalRow = sheet.getRow(lastRow);
+    totalRow.getCell('name').value = 'TOTAL';
+    totalRow.getCell('name').font = { bold: true };
+    totalRow.getCell('subtotal').value = exportData.totalEstimated;
+    totalRow.getCell('subtotal').font = { bold: true };
+    totalRow.getCell('subtotal').numFmt = '$#,##0';
+
+    // Number format for cost columns
+    sheet.getColumn('unitCost').numFmt = '$#,##0';
+    sheet.getColumn('subtotal').numFmt = '$#,##0';
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    return Buffer.from(buffer);
   }
 }

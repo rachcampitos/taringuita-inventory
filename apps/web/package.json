@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@serwist/next": "^9.5.6",
+    "lucide-react": "^0.563.0",
     "next": "^16.1.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "lucide-react": "^0.563.0",
+    "recharts": "^3.7.0",
+    "serwist": "^9.5.6",
     "tailwindcss": "^4.1.0"
   },
   "devDependencies": {
@@ -20,8 +23,8 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.7.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^16.1.6"
+    "eslint-config-next": "^16.1.6",
+    "typescript": "^5.7.0"
   }
 }

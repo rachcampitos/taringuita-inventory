@@ -2,16 +2,19 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   Req,
+  Res,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -25,6 +28,7 @@ import { OrderStatus, Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { OrdersService } from './orders.service';
+import { ConsumptionScheduler } from './consumption.scheduler';
 import { GenerateOrderDto } from './dto/generate-order.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
@@ -37,7 +41,10 @@ import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 )
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly consumptionScheduler: ConsumptionScheduler,
+  ) {}
 
   // ------------------------------------------------------------------
   // POST /orders/generate
@@ -111,6 +118,18 @@ export class OrdersController {
   }
 
   // ------------------------------------------------------------------
+  // POST /orders/calculate-consumption/all
+  // ------------------------------------------------------------------
+
+  @Post('calculate-consumption/all')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Calcular consumo semanal para todos los locales (ADMIN)' })
+  @ApiResponse({ status: 201, description: 'Consumo calculado para todos los locales' })
+  calculateConsumptionAll() {
+    return this.consumptionScheduler.calculateAllLocations();
+  }
+
+  // ------------------------------------------------------------------
   // GET /orders/:id
   // ------------------------------------------------------------------
 
@@ -170,5 +189,45 @@ export class OrdersController {
   @ApiResponse({ status: 404, description: 'Pedido no encontrado' })
   exportOrder(@Param('id') id: string) {
     return this.ordersService.exportOrder(id);
+  }
+
+  // ------------------------------------------------------------------
+  // GET /orders/:id/export/pdf
+  // ------------------------------------------------------------------
+
+  @Get(':id/export/pdf')
+  @Roles(Role.ADMIN, Role.HEAD_CHEF)
+  @ApiOperation({ summary: 'Descargar pedido como PDF (ADMIN, HEAD_CHEF)' })
+  @ApiParam({ name: 'id', description: 'ID del pedido' })
+  @ApiResponse({ status: 200, description: 'Archivo PDF' })
+  @ApiResponse({ status: 404, description: 'Pedido no encontrado' })
+  async exportPdf(@Param('id') id: string, @Res() res: Response) {
+    const buffer = await this.ordersService.generatePdf(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="pedido-${id.slice(0, 8)}.pdf"`,
+      'Content-Length': buffer.length,
+    });
+    res.end(buffer);
+  }
+
+  // ------------------------------------------------------------------
+  // GET /orders/:id/export/excel
+  // ------------------------------------------------------------------
+
+  @Get(':id/export/excel')
+  @Roles(Role.ADMIN, Role.HEAD_CHEF)
+  @ApiOperation({ summary: 'Descargar pedido como Excel (ADMIN, HEAD_CHEF)' })
+  @ApiParam({ name: 'id', description: 'ID del pedido' })
+  @ApiResponse({ status: 200, description: 'Archivo Excel' })
+  @ApiResponse({ status: 404, description: 'Pedido no encontrado' })
+  async exportExcel(@Param('id') id: string, @Res() res: Response) {
+    const buffer = await this.ordersService.generateExcel(id);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="pedido-${id.slice(0, 8)}.xlsx"`,
+      'Content-Length': buffer.length,
+    });
+    res.end(buffer);
   }
 }

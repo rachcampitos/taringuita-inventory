@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -13,8 +13,14 @@ import {
   LogOut,
   UtensilsCrossed,
   ChevronRight,
+  BookOpen,
+  BarChart3,
+  MoreHorizontal,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useOnlineStatus } from "@/lib/use-online-status";
+import { UpdatePrompt } from "@/components/pwa/UpdatePrompt";
 
 interface NavItem {
   href: string;
@@ -28,7 +34,9 @@ const navItems: NavItem[] = [
   { href: "/inventory", label: "Inventario", icon: ClipboardList },
   { href: "/production", label: "Produccion", icon: Utensils },
   { href: "/products", label: "Productos", icon: Package, adminOnly: true },
+  { href: "/recipes", label: "Recetas", icon: BookOpen, adminOnly: true },
   { href: "/orders", label: "Pedidos", icon: ShoppingCart, adminOnly: true },
+  { href: "/reports", label: "Reportes", icon: BarChart3, adminOnly: true },
   { href: "/settings", label: "Configuracion", icon: Settings, adminOnly: true },
 ];
 
@@ -42,6 +50,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user, isLoading, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const isOnline = useOnlineStatus();
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -162,6 +172,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <h1 className="font-bold text-gray-900 dark:text-slate-100 text-sm">
             Taringuita Inventory
           </h1>
+          {!isOnline && (
+            <span className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              Offline
+            </span>
+          )}
           <div className="ml-auto">
             <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
               <span className="text-white text-xs font-bold">
@@ -171,6 +187,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
 
+        <UpdatePrompt />
+
         {/* Page content */}
         <main className="flex-1 pb-20 md:pb-0">
           {children}
@@ -178,40 +196,115 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </div>
 
       {/* Bottom nav - Mobile */}
-      <nav
-        aria-label="Navegacion principal"
-        className="md:hidden fixed bottom-0 inset-x-0 z-20 bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 flex"
-      >
-        {visibleItems.slice(0, 5).map((item) => {
-          const Icon = item.icon;
-          const isActive =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+      {(() => {
+        const mainItems = visibleItems.length > 5 ? visibleItems.slice(0, 4) : visibleItems.slice(0, 5);
+        const overflowItems = visibleItems.length > 5 ? visibleItems.slice(4) : [];
+        const overflowActive = overflowItems.some(
+          (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
+        );
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={[
-                "flex-1 flex flex-col items-center justify-center py-2.5 gap-1",
-                "text-xs font-medium transition-colors duration-150",
-                isActive
-                  ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-gray-400 dark:text-slate-500",
-              ].join(" ")}
-              aria-current={isActive ? "page" : undefined}
+        return (
+          <>
+            <nav
+              aria-label="Navegacion principal"
+              className="md:hidden fixed bottom-0 inset-x-0 z-20 bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 flex"
             >
-              <Icon size={22} />
-              <span className="text-[10px] leading-none">{item.label}</span>
-              {isActive && (
-                <span
-                  aria-hidden
-                  className="absolute bottom-0 h-0.5 w-8 bg-emerald-600 rounded-t-full"
-                />
+              {mainItems.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={[
+                      "flex-1 flex flex-col items-center justify-center py-2.5 gap-1",
+                      "text-xs font-medium transition-colors duration-150",
+                      isActive
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-gray-400 dark:text-slate-500",
+                    ].join(" ")}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    <Icon size={22} />
+                    <span className="text-[10px] leading-none">{item.label}</span>
+                    {isActive && (
+                      <span
+                        aria-hidden
+                        className="absolute bottom-0 h-0.5 w-8 bg-emerald-600 rounded-t-full"
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+
+              {overflowItems.length > 0 && (
+                <button
+                  onClick={() => setShowMoreMenu((v) => !v)}
+                  className={[
+                    "flex-1 flex flex-col items-center justify-center py-2.5 gap-1",
+                    "text-xs font-medium transition-colors duration-150",
+                    overflowActive || showMoreMenu
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-gray-400 dark:text-slate-500",
+                  ].join(" ")}
+                >
+                  <MoreHorizontal size={22} />
+                  <span className="text-[10px] leading-none">Mas</span>
+                </button>
               )}
-            </Link>
-          );
-        })}
-      </nav>
+            </nav>
+
+            {/* Overflow "More" menu */}
+            {showMoreMenu && overflowItems.length > 0 && (
+              <>
+                <div
+                  className="md:hidden fixed inset-0 bg-black/30 z-20"
+                  onClick={() => setShowMoreMenu(false)}
+                />
+                <div className="md:hidden fixed bottom-[60px] inset-x-0 z-30 bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 rounded-t-2xl shadow-xl px-2 py-3 animate-[slideUp_0.2s_ease-out]">
+                  <div className="flex items-center justify-between px-3 mb-2">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                      Mas opciones
+                    </p>
+                    <button
+                      onClick={() => setShowMoreMenu(false)}
+                      className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  {overflowItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive =
+                      pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setShowMoreMenu(false)}
+                        className={[
+                          "flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium",
+                          "transition-colors duration-150",
+                          isActive
+                            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                            : "text-gray-600 hover:bg-gray-100 dark:text-slate-400 dark:hover:bg-slate-700",
+                        ].join(" ")}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        <Icon size={20} />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }
