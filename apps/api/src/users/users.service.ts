@@ -15,6 +15,8 @@ const USER_SELECT = {
   name: true,
   role: true,
   organizationId: true,
+  locationId: true,
+  location: { select: { id: true, name: true } },
   isActive: true,
   createdAt: true,
   updatedAt: true,
@@ -57,6 +59,7 @@ export class UsersService {
         name: dto.name,
         role: dto.role,
         organizationId: dto.organizationId,
+        locationId: dto.locationId ?? null,
       },
       select: USER_SELECT,
     });

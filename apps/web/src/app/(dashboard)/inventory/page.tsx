@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -24,52 +25,29 @@ interface Product {
   id: string;
   code: string;
   name: string;
-  category: string;
-  unit: string;
-  minStock: number;
+  unitOfMeasure: string;
+  sortOrder: number;
+  countedQuantity: number | null;
+  notes: string | null;
+  countedBy: { id: string; name: string } | null;
 }
 
-interface CountEntry {
-  productId: string;
-  quantity: number | "";
+interface CategoryGroup {
+  category: { id: string; name: string };
+  products: Product[];
+}
+
+interface StationCountsResponse {
+  stationId: string;
+  stationName: string;
+  date: string;
+  totalProducts: number;
+  countedProducts: number;
+  isComplete: boolean;
+  categories: CategoryGroup[];
 }
 
 type CountMap = Record<string, number | "">;
-
-const categoryOrder = [
-  "Carnes",
-  "Aves",
-  "Pescados y Mariscos",
-  "Lacteos",
-  "Verduras",
-  "Frutas",
-  "Granos y Cereales",
-  "Aceites y Condimentos",
-  "Bebidas",
-  "Otros",
-];
-
-function groupByCategory(products: Product[]): Record<string, Product[]> {
-  const grouped: Record<string, Product[]> = {};
-  for (const product of products) {
-    if (!grouped[product.category]) {
-      grouped[product.category] = [];
-    }
-    grouped[product.category].push(product);
-  }
-  return grouped;
-}
-
-function sortCategories(categories: string[]): string[] {
-  return [...categories].sort((a, b) => {
-    const ai = categoryOrder.indexOf(a);
-    const bi = categoryOrder.indexOf(b);
-    if (ai === -1 && bi === -1) return a.localeCompare(b);
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
-    return ai - bi;
-  });
-}
 
 export default function InventoryPage() {
   const { user } = useAuth();
@@ -77,15 +55,24 @@ export default function InventoryPage() {
 
   const [stations, setStations] = useState<Station[]>([]);
   const [selectedStation, setSelectedStation] = useState<string>("");
-  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryGroup[]>([]);
   const [counts, setCounts] = useState<CountMap>({});
   const [search, setSearch] = useState("");
   const [isLoadingStations, setIsLoadingStations] = useState(true);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const searchRef = useRef<HTMLInputElement>(null);
+  const initialCountsRef = useRef<string>("");
+
+  const hasUnsavedChanges = useMemo(() => {
+    if (!initialCountsRef.current) return false;
+    return JSON.stringify(counts) !== initialCountsRef.current;
+  }, [counts]);
+
+  useUnsavedChanges(hasUnsavedChanges);
 
   // Load stations
   useEffect(() => {
@@ -113,13 +100,16 @@ export default function InventoryPage() {
     load();
   }, [user]);
 
-  // Load products when station changes
+  // Load products when station changes (uses inventory endpoint to get products + existing counts)
   useEffect(() => {
     if (!selectedStation) {
-      setProducts([]);
+      setCategories([]);
       setCounts({});
+      setTotalProducts(0);
       return;
     }
+
+    const today = new Date().toISOString().slice(0, 10);
 
     const load = async () => {
       setIsLoadingProducts(true);
@@ -127,16 +117,20 @@ export default function InventoryPage() {
       setSavedSuccessfully(false);
 
       try {
-        const { data } = await api.get<Product[]>(
-          `/stations/${selectedStation}/products`
+        const { data } = await api.get<StationCountsResponse>(
+          `/inventory/station/${selectedStation}?date=${today}`
         );
-        setProducts(data);
-        // Initialize counts to empty
+        setCategories(data.categories);
+        setTotalProducts(data.totalProducts);
+        // Initialize counts: use existing counted value or empty
         const initial: CountMap = {};
-        data.forEach((p) => {
-          initial[p.id] = "";
-        });
+        for (const cat of data.categories) {
+          for (const p of cat.products) {
+            initial[p.id] = p.countedQuantity !== null ? p.countedQuantity : "";
+          }
+        }
         setCounts(initial);
+        initialCountsRef.current = JSON.stringify(initial);
       } catch (err) {
         if (err instanceof ApiError) {
           showError(err.message);
@@ -151,30 +145,30 @@ export default function InventoryPage() {
     load();
   }, [selectedStation]);
 
-  const filteredProducts = useMemo(() => {
+  const filteredCategories = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return products;
-    return products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.code.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q)
-    );
-  }, [products, search]);
-
-  const grouped = useMemo(
-    () => groupByCategory(filteredProducts),
-    [filteredProducts]
-  );
-
-  const sortedCategories = useMemo(
-    () => sortCategories(Object.keys(grouped)),
-    [grouped]
-  );
+    if (!q) return categories;
+    return categories
+      .map((cat) => ({
+        ...cat,
+        products: cat.products.filter(
+          (p) =>
+            p.name.toLowerCase().includes(q) ||
+            p.code.toLowerCase().includes(q) ||
+            cat.category.name.toLowerCase().includes(q)
+        ),
+      }))
+      .filter((cat) => cat.products.length > 0);
+  }, [categories, search]);
 
   const countedProducts = useMemo(
     () => Object.values(counts).filter((v) => v !== "").length,
     [counts]
+  );
+
+  const allProducts = useMemo(
+    () => categories.flatMap((c) => c.products),
+    [categories]
   );
 
   const handleCountChange = (productId: string, value: string) => {
@@ -186,27 +180,30 @@ export default function InventoryPage() {
   const handleSave = async () => {
     if (!selectedStation) return;
 
-    const entries: CountEntry[] = Object.entries(counts)
+    const items = Object.entries(counts)
       .filter(([, qty]) => qty !== "")
       .map(([productId, quantity]) => ({
         productId,
         quantity: quantity as number,
       }));
 
-    if (entries.length === 0) {
+    if (items.length === 0) {
       showError("Ingresa al menos una cantidad antes de guardar.");
       return;
     }
+
+    const today = new Date().toISOString().slice(0, 10);
 
     setIsSaving(true);
     try {
       await api.post("/inventory/count/bulk", {
         stationId: selectedStation,
-        counts: entries,
-        countedAt: new Date().toISOString(),
+        date: today,
+        items,
       });
       setSavedSuccessfully(true);
-      success(`Conteo guardado: ${entries.length} productos registrados.`, 5000);
+      initialCountsRef.current = JSON.stringify(counts);
+      success(`Conteo guardado: ${items.length} productos registrados.`, 5000);
     } catch (err) {
       if (err instanceof ApiError) {
         showError(err.message);
@@ -224,7 +221,7 @@ export default function InventoryPage() {
   return (
     <div className="flex flex-col min-h-full">
       {/* Sticky top bar */}
-      <div className="sticky top-0 md:top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-4 py-3 space-y-3">
+      <div className="sticky top-[53px] md:top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-4 py-3 space-y-3">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-bold text-gray-900 dark:text-slate-100">
             Conteo de inventario
@@ -327,36 +324,34 @@ export default function InventoryPage() {
           </div>
         )}
 
-        {!isLoadingProducts && selectedStation && products.length > 0 && (
+        {!isLoadingProducts && selectedStation && allProducts.length > 0 && (
           <>
             {/* Summary bar */}
             <div className="flex items-center justify-between mb-4 text-sm">
               <span className="text-gray-500 dark:text-slate-400">
-                Estacion: <strong className="text-gray-900 dark:text-slate-100">{stationName}</strong>
+                Estacion: <strong className="text-gray-900 dark:text-slate-100 capitalize">{stationName}</strong>
               </span>
               <span className="text-gray-500 dark:text-slate-400">
                 <strong className="text-emerald-600 dark:text-emerald-400">{countedProducts}</strong>
-                /{filteredProducts.length} contados
+                /{totalProducts} contados
               </span>
             </div>
 
-            {sortedCategories.length === 0 ? (
+            {filteredCategories.length === 0 ? (
               <div className="text-center py-12 text-sm text-gray-400 dark:text-slate-500">
-                No se encontraron productos con "{search}".
+                No se encontraron productos con &ldquo;{search}&rdquo;.
               </div>
             ) : (
               <div className="space-y-6 pb-28">
-                {sortedCategories.map((category) => (
-                  <section key={category}>
+                {filteredCategories.map((catGroup) => (
+                  <section key={catGroup.category.id}>
                     <h2 className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2 px-1">
-                      {category}
+                      {catGroup.category.name}
                     </h2>
                     <div className="space-y-2">
-                      {grouped[category].map((product) => {
+                      {catGroup.products.map((product) => {
                         const qty = counts[product.id];
-                        const hasValue = qty !== "";
-                        const isLow =
-                          hasValue && (qty as number) < product.minStock;
+                        const hasValue = qty !== "" && qty !== undefined;
 
                         return (
                           <div
@@ -365,9 +360,7 @@ export default function InventoryPage() {
                               "flex items-center gap-3 rounded-xl border px-4 py-3",
                               "bg-white dark:bg-slate-800 transition-colors",
                               hasValue
-                                ? isLow
-                                  ? "border-amber-300 dark:border-amber-700"
-                                  : "border-emerald-300 dark:border-emerald-700"
+                                ? "border-emerald-300 dark:border-emerald-700"
                                 : "border-gray-200 dark:border-slate-700",
                             ].join(" ")}
                           >
@@ -377,26 +370,18 @@ export default function InventoryPage() {
                                 {product.name}
                               </p>
                               <p className="text-xs text-gray-400 dark:text-slate-500">
-                                {product.code} · min: {product.minStock} {product.unit}
+                                {product.code} &middot; {product.unitOfMeasure}
                               </p>
                             </div>
 
                             {/* Status icon */}
                             {hasValue && (
                               <div className="shrink-0">
-                                {isLow ? (
-                                  <AlertTriangle
-                                    size={16}
-                                    className="text-amber-500"
-                                    aria-label="Stock bajo minimo"
-                                  />
-                                ) : (
-                                  <CheckCircle2
-                                    size={16}
-                                    className="text-emerald-500"
-                                    aria-label="Stock OK"
-                                  />
-                                )}
+                                <CheckCircle2
+                                  size={16}
+                                  className="text-emerald-500"
+                                  aria-label="Contado"
+                                />
                               </div>
                             )}
 
@@ -407,7 +392,7 @@ export default function InventoryPage() {
                                 inputMode="decimal"
                                 min="0"
                                 step="0.1"
-                                value={qty}
+                                value={qty ?? ""}
                                 onChange={(e) =>
                                   handleCountChange(product.id, e.target.value)
                                 }
@@ -418,15 +403,13 @@ export default function InventoryPage() {
                                   "bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100",
                                   "focus:outline-none focus:ring-2 focus:ring-emerald-500",
                                   "placeholder:text-gray-300 dark:placeholder:text-slate-600",
-                                  hasValue && isLow
-                                    ? "border-amber-400 dark:border-amber-600"
-                                    : hasValue
+                                  hasValue
                                     ? "border-emerald-400 dark:border-emerald-600"
                                     : "border-gray-300 dark:border-slate-600",
                                 ].join(" ")}
                               />
                               <span className="text-xs text-gray-400 dark:text-slate-500 w-8">
-                                {product.unit}
+                                {product.unitOfMeasure}
                               </span>
                             </div>
                           </div>
@@ -440,7 +423,7 @@ export default function InventoryPage() {
           </>
         )}
 
-        {!isLoadingProducts && selectedStation && products.length === 0 && (
+        {!isLoadingProducts && selectedStation && allProducts.length === 0 && (
           <div className="text-center py-12 text-sm text-gray-400 dark:text-slate-500">
             No hay productos asignados a esta estacion.
           </div>
@@ -448,7 +431,7 @@ export default function InventoryPage() {
       </div>
 
       {/* Fixed save button */}
-      {selectedStation && products.length > 0 && (
+      {selectedStation && allProducts.length > 0 && (
         <div className="fixed bottom-16 md:bottom-0 inset-x-0 px-4 py-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-t border-gray-200 dark:border-slate-700 z-10">
           <div className="max-w-lg mx-auto flex items-center gap-3">
             <div className="flex-1 text-sm text-gray-500 dark:text-slate-400">
@@ -457,7 +440,7 @@ export default function InventoryPage() {
                   <strong className="text-gray-900 dark:text-slate-100">
                     {countedProducts}
                   </strong>{" "}
-                  de {filteredProducts.length} productos
+                  de {totalProducts} productos
                 </span>
               ) : (
                 "Ingresa las cantidades"

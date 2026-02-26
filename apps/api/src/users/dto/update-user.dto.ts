@@ -29,4 +29,9 @@ export class UpdateUserDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @ApiPropertyOptional({ example: 'cuid_of_location' })
+  @IsString()
+  @IsOptional()
+  locationId?: string;
 }

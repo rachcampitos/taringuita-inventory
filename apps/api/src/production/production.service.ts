@@ -36,12 +36,26 @@ export class ProductionService {
   async logProduction(dto: CreateProductionLogDto, userId: string) {
     await this.assertUserCanSubmitToStation(userId, dto.stationId);
 
-    const log = await this.prisma.productionLog.create({
-      data: {
+    const date = parseDateOnly(dto.date);
+
+    const log = await this.prisma.productionLog.upsert({
+      where: {
+        stationId_productId_date: {
+          stationId: dto.stationId,
+          productId: dto.productId,
+          date,
+        },
+      },
+      update: {
+        quantityProduced: dto.quantityProduced,
+        notes: dto.notes,
+        userId,
+      },
+      create: {
         stationId: dto.stationId,
         productId: dto.productId,
         quantityProduced: dto.quantityProduced,
-        date: parseDateOnly(dto.date),
+        date,
         notes: dto.notes,
         userId,
       },
@@ -72,8 +86,20 @@ export class ProductionService {
 
     const logs = await this.prisma.$transaction(
       dto.items.map((item) =>
-        this.prisma.productionLog.create({
-          data: {
+        this.prisma.productionLog.upsert({
+          where: {
+            stationId_productId_date: {
+              stationId: dto.stationId,
+              productId: item.productId,
+              date,
+            },
+          },
+          update: {
+            quantityProduced: item.quantityProduced,
+            notes: item.notes,
+            userId,
+          },
+          create: {
             stationId: dto.stationId,
             productId: item.productId,
             quantityProduced: item.quantityProduced,

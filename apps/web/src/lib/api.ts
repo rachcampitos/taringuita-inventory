@@ -66,11 +66,18 @@ async function refreshAccessToken(): Promise<string | null> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) return null;
 
+  const userStr = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const userId = userStr ? JSON.parse(userStr)?.id : null;
+  if (!userId) {
+    clearTokens();
+    return null;
+  }
+
   try {
     const response = await fetch(`${BASE_URL}/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
+      body: JSON.stringify({ userId, refreshToken }),
     });
 
     if (!response.ok) {

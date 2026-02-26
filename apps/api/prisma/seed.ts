@@ -1,5 +1,7 @@
-import { PrismaClient, Role, UnitOfMeasure } from '@prisma/client';
+import { PrismaClient, Role, UnitOfMeasure, DeliveryDay } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
 
@@ -16,11 +18,139 @@ function log(msg: string): void {
 }
 
 // ---------------------------------------------------------------------------
+// Types for imported JSON
+// ---------------------------------------------------------------------------
+
+interface ProductData {
+  code: string;
+  name: string;
+  family: string;
+  sheet: string;
+  unitOfMeasure: string;
+  unitOfOrder: string;
+  conversionFactor: number;
+}
+
+interface ImportData {
+  families: string[];
+  products: ProductData[];
+}
+
+// ---------------------------------------------------------------------------
+// Unit mapping
+// ---------------------------------------------------------------------------
+
+function toUnitEnum(val: string): UnitOfMeasure {
+  const map: Record<string, UnitOfMeasure> = {
+    KG: UnitOfMeasure.KG,
+    LT: UnitOfMeasure.LT,
+    UN: UnitOfMeasure.UN,
+    GR: UnitOfMeasure.GR,
+    ML: UnitOfMeasure.ML,
+    PORCIONES: UnitOfMeasure.PORCIONES,
+    BANDEJAS: UnitOfMeasure.BANDEJAS,
+    BOLSAS: UnitOfMeasure.BOLSAS,
+    CAJAS: UnitOfMeasure.CAJAS,
+    BIDONES: UnitOfMeasure.BIDONES,
+    LATAS: UnitOfMeasure.LATAS,
+    PAQUETES: UnitOfMeasure.PAQUETES,
+    BOTELLAS: UnitOfMeasure.BOTELLAS,
+    SOBRES: UnitOfMeasure.SOBRES,
+    ROLLOS: UnitOfMeasure.ROLLOS,
+    FRASCOS: UnitOfMeasure.FRASCOS,
+    POTES: UnitOfMeasure.POTES,
+    TARROS: UnitOfMeasure.TARROS,
+    MALLAS: UnitOfMeasure.MALLAS,
+    SACOS: UnitOfMeasure.SACOS,
+  };
+  return map[val] ?? UnitOfMeasure.UN;
+}
+
+// ---------------------------------------------------------------------------
+// DeliveryDay assignment based on product sheet/family
+// ---------------------------------------------------------------------------
+
+function getDeliveryDay(product: ProductData): DeliveryDay | null {
+  switch (product.sheet) {
+    case 'Cocina VITACURA':
+      // Abarrotes and carnes -> MARTES
+      return DeliveryDay.MARTES;
+    case 'Futas y Verduras':
+      // Fresh produce -> MARTES
+      return DeliveryDay.MARTES;
+    case 'Procesado':
+      // Panes and processed -> MIERCOLES
+      return DeliveryDay.MIERCOLES;
+    case 'Aseo':
+    case 'Otros Materiales':
+    case 'Cuchillería y Cristalería':
+    case 'Articulos de Oficina':
+      // Aseo, utensilios -> JUEVES
+      return DeliveryDay.JUEVES;
+    default:
+      return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Station assignment logic
+// ---------------------------------------------------------------------------
+
+/**
+ * Determines which stations a product should be assigned to based on its
+ * sheet and family. All kitchen food products go to all 7 stations.
+ * Non-food items go to relevant stations.
+ */
+function getStationAssignments(product: ProductData): string[] {
+  const allKitchen = [
+    'sta-montaje', 'sta-frio', 'sta-saltado',
+    'sta-plancha', 'sta-pizzeria', 'sta-produccion', 'sta-pasteleria',
+  ];
+
+  switch (product.sheet) {
+    case 'Cocina VITACURA':
+    case 'Futas y Verduras':
+      // Main kitchen ingredients - available at all stations
+      return allKitchen;
+
+    case 'Procesado':
+      // Pre-elaborados and salsas - production + all stations (they consume them)
+      return allKitchen;
+
+    case 'Personal':
+      // Staff food - tracked at production station
+      return ['sta-produccion'];
+
+    case 'Aseo':
+    case 'Otros Materiales':
+      // Cleaning and materials - tracked at montaje (general/front)
+      return ['sta-montaje'];
+
+    case 'Cuchillería y Cristalería':
+      // Tableware - tracked at montaje
+      return ['sta-montaje'];
+
+    case 'Articulos de Oficina':
+      // Office supplies - tracked at montaje
+      return ['sta-montaje'];
+
+    default:
+      return ['sta-montaje'];
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  log('Starting seed...');
+  log('Starting seed with real Excel data...');
+
+  // Load extracted data
+  const jsonPath = path.join(__dirname, 'products-data.json');
+  const raw = fs.readFileSync(jsonPath, 'utf-8');
+  const data: ImportData = JSON.parse(raw);
+  log(`Loaded ${data.products.length} products in ${data.families.length} families from JSON`);
 
   // -------------------------------------------------------------------------
   // 1. Organization
@@ -31,29 +161,41 @@ async function main(): Promise<void> {
     update: { name: 'Taringuita' },
     create: { id: 'org-taringuita', name: 'Taringuita' },
   });
-  log(`  Organization: ${organization.name}`);
 
   // -------------------------------------------------------------------------
-  // 2. Location
+  // 2. Locations (7 locales)
   // -------------------------------------------------------------------------
-  log('Upserting location...');
-  const location = await prisma.location.upsert({
-    where: { id: 'loc-vitacura' },
-    update: {
-      name: 'Taringuita Vitacura',
-      address: 'Vitacura, Santiago, Chile',
-    },
-    create: {
-      id: 'loc-vitacura',
-      name: 'Taringuita Vitacura',
-      address: 'Vitacura, Santiago, Chile',
-      organizationId: organization.id,
-    },
-  });
-  log(`  Location: ${location.name}`);
+  log('Upserting locations...');
+
+  const locationDefs = [
+    { id: 'loc-vitacura',     name: 'Taringuita Vitacura',     address: 'Vitacura, Santiago, Chile',     brands: ['Taringuita'] },
+    { id: 'loc-providencia',  name: 'Taringuita Providencia',  address: 'Providencia, Santiago, Chile',  brands: ['Taringuita'] },
+    { id: 'loc-las-condes',   name: 'Taringuita Las Condes',   address: 'Las Condes, Santiago, Chile',   brands: ['Taringuita'] },
+    { id: 'loc-nunoa',        name: 'Taringuita Nunoa',        address: 'Nunoa, Santiago, Chile',         brands: ['Taringuita'] },
+    { id: 'loc-santiago',     name: 'Taringuita Santiago Centro', address: 'Santiago Centro, Chile',      brands: ['Taringuita'] },
+    { id: 'loc-la-reina',     name: 'Taringuita La Reina',     address: 'La Reina, Santiago, Chile',     brands: ['Taringuita'] },
+    { id: 'loc-lo-barnechea', name: 'Taringuita Lo Barnechea', address: 'Lo Barnechea, Santiago, Chile', brands: ['Taringuita'] },
+  ];
+
+  for (const loc of locationDefs) {
+    await prisma.location.upsert({
+      where: { id: loc.id },
+      update: { name: loc.name, address: loc.address, brands: loc.brands },
+      create: {
+        id: loc.id,
+        name: loc.name,
+        address: loc.address,
+        brands: loc.brands,
+        organizationId: organization.id,
+      },
+    });
+    log(`  Location: ${loc.name}`);
+  }
+
+  const location = { id: 'loc-vitacura' }; // primary location for stations
 
   // -------------------------------------------------------------------------
-  // 3. Stations
+  // 3. Stations (7 kitchen stations)
   // -------------------------------------------------------------------------
   log('Upserting stations...');
 
@@ -67,16 +209,13 @@ async function main(): Promise<void> {
     { id: 'sta-pasteleria', name: 'pasteleria' },
   ];
 
-  const stations: Record<string, { id: string; name: string }> = {};
-
   for (const def of stationDefs) {
-    const station = await prisma.station.upsert({
+    await prisma.station.upsert({
       where: { id: def.id },
       update: { name: def.name },
       create: { id: def.id, name: def.name, locationId: location.id },
     });
-    stations[def.name] = station;
-    log(`  Station: ${station.name}`);
+    log(`  Station: ${def.name}`);
   }
 
   // -------------------------------------------------------------------------
@@ -84,23 +223,15 @@ async function main(): Promise<void> {
   // -------------------------------------------------------------------------
   log('Upserting users...');
 
-  interface UserDef {
-    id: string;
-    email: string;
-    name: string;
-    password: string;
-    role: Role;
-    stationNames: string[];
-  }
-
-  const userDefs: UserDef[] = [
+  const userDefs = [
     {
       id: 'usr-raymundo',
       email: 'raymundo@taringuita.cl',
       name: 'Raymundo',
       password: 'admin123',
       role: Role.ADMIN,
-      stationNames: [],
+      locationId: 'loc-vitacura',
+      stationIds: [] as string[],
     },
     {
       id: 'usr-carlos',
@@ -108,7 +239,8 @@ async function main(): Promise<void> {
       name: 'Carlos',
       password: 'chef123',
       role: Role.HEAD_CHEF,
-      stationNames: ['montaje', 'frio', 'saltado'],
+      locationId: 'loc-vitacura',
+      stationIds: ['sta-montaje', 'sta-frio', 'sta-saltado'],
     },
     {
       id: 'usr-maria',
@@ -116,7 +248,8 @@ async function main(): Promise<void> {
       name: 'Maria',
       password: 'chef123',
       role: Role.HEAD_CHEF,
-      stationNames: ['plancha', 'pizzeria', 'produccion', 'pasteleria'],
+      locationId: 'loc-vitacura',
+      stationIds: ['sta-plancha', 'sta-pizzeria', 'sta-produccion', 'sta-pasteleria'],
     },
     {
       id: 'usr-pedro',
@@ -124,7 +257,8 @@ async function main(): Promise<void> {
       name: 'Pedro',
       password: 'sous123',
       role: Role.SOUS_CHEF,
-      stationNames: ['montaje', 'frio', 'saltado'],
+      locationId: 'loc-vitacura',
+      stationIds: ['sta-montaje', 'sta-frio', 'sta-saltado'],
     },
     {
       id: 'usr-ana',
@@ -132,7 +266,8 @@ async function main(): Promise<void> {
       name: 'Ana',
       password: 'sous123',
       role: Role.SOUS_CHEF,
-      stationNames: ['plancha', 'pizzeria', 'produccion', 'pasteleria'],
+      locationId: 'loc-vitacura',
+      stationIds: ['sta-plancha', 'sta-pizzeria', 'sta-produccion', 'sta-pasteleria'],
     },
   ];
 
@@ -141,7 +276,7 @@ async function main(): Promise<void> {
 
     const user = await prisma.user.upsert({
       where: { email: def.email },
-      update: { name: def.name, role: def.role, password: hashed },
+      update: { name: def.name, role: def.role, password: hashed, locationId: def.locationId },
       create: {
         id: def.id,
         email: def.email,
@@ -149,17 +284,15 @@ async function main(): Promise<void> {
         password: hashed,
         role: def.role,
         organizationId: organization.id,
+        locationId: def.locationId,
       },
     });
 
-    // Assign stations
-    for (const stationName of def.stationNames) {
-      const station = stations[stationName];
-      if (!station) continue;
+    for (const stationId of def.stationIds) {
       await prisma.userStation.upsert({
-        where: { userId_stationId: { userId: user.id, stationId: station.id } },
+        where: { userId_stationId: { userId: user.id, stationId } },
         update: {},
-        create: { userId: user.id, stationId: station.id },
+        create: { userId: user.id, stationId },
       });
     }
 
@@ -167,513 +300,170 @@ async function main(): Promise<void> {
   }
 
   // -------------------------------------------------------------------------
-  // 5. Product Categories
+  // 5. Clean up old dummy data
+  // -------------------------------------------------------------------------
+  log('Cleaning up old dummy data...');
+
+  const oldProducts = await prisma.product.findMany({
+    where: { code: { startsWith: 'PRD-' } },
+    select: { id: true },
+  });
+  if (oldProducts.length > 0) {
+    const oldIds = oldProducts.map(p => p.id);
+    await prisma.stationProduct.deleteMany({ where: { productId: { in: oldIds } } });
+    await prisma.inventoryCount.deleteMany({ where: { productId: { in: oldIds } } });
+    await prisma.productionLog.deleteMany({ where: { productId: { in: oldIds } } });
+    await prisma.product.deleteMany({ where: { id: { in: oldIds } } });
+    log(`  Removed ${oldProducts.length} old dummy products.`);
+  }
+
+  // Clean empty categories (from old seed)
+  const emptyCategories = await prisma.productCategory.findMany({
+    where: { products: { none: {} } },
+    select: { id: true },
+  });
+  if (emptyCategories.length > 0) {
+    await prisma.productCategory.deleteMany({
+      where: { id: { in: emptyCategories.map(c => c.id) } },
+    });
+    log(`  Removed ${emptyCategories.length} empty categories.`);
+  }
+
+  // -------------------------------------------------------------------------
+  // 6. Product Categories (from Excel families)
   // -------------------------------------------------------------------------
   log('Upserting product categories...');
 
-  interface CategoryDef {
-    id: string;
-    name: string;
-    sortOrder: number;
-  }
+  const categoryMap: Record<string, string> = {}; // family name -> category id
 
-  const categoryDefs: CategoryDef[] = [
-    { id: 'cat-abarrotes',    name: 'Abarrotes Cocina',       sortOrder: 1 },
-    { id: 'cat-fv',           name: 'Frutas y Verduras',      sortOrder: 2 },
-    { id: 'cat-carnes',       name: 'Carnes y Aves',          sortOrder: 3 },
-    { id: 'cat-pescados',     name: 'Pescados y Mariscos',    sortOrder: 4 },
-    { id: 'cat-lacteos',      name: 'Lacteos y Huevos',       sortOrder: 5 },
-    { id: 'cat-panaderia',    name: 'Panaderia y Pasteleria', sortOrder: 6 },
-    { id: 'cat-bebidas',      name: 'Bebidas y Licores',      sortOrder: 7 },
-    { id: 'cat-salsas',       name: 'Salsas y Condimentos',   sortOrder: 8 },
-    { id: 'cat-preelaborado', name: 'Pre-elaborados',         sortOrder: 9 },
-    { id: 'cat-limpieza',     name: 'Limpieza y Descartables', sortOrder: 10 },
-  ];
-
-  const categories: Record<string, { id: string; name: string }> = {};
-
-  for (const def of categoryDefs) {
+  for (let i = 0; i < data.families.length; i++) {
+    const familyName = data.families[i];
     const category = await prisma.productCategory.upsert({
-      where: { name: def.name },
-      update: { sortOrder: def.sortOrder },
-      create: { id: def.id, name: def.name, sortOrder: def.sortOrder },
+      where: { name: familyName },
+      update: { sortOrder: i + 1 },
+      create: { name: familyName, sortOrder: i + 1 },
     });
-    categories[def.id] = category;
-    log(`  Category: ${category.name}`);
+    categoryMap[familyName] = category.id;
   }
+
+  log(`  ${data.families.length} categories upserted.`);
 
   // -------------------------------------------------------------------------
-  // 6. Products
+  // 7. Products (596 from Excel)
   // -------------------------------------------------------------------------
   log('Upserting products...');
 
-  interface ProductDef {
-    code: string;
-    name: string;
-    categoryId: string;
-    unit: UnitOfMeasure;
-    minStock: number;
-    wastagePercent: number;
-    stationNames: string[];
-  }
+  const productIdMap: Record<string, string> = {}; // code -> product id
+  let productCount = 0;
 
-  const productDefs: ProductDef[] = [
-    // ---- Abarrotes Cocina (cat-abarrotes) ----------------------------------
-    {
-      code: 'PRD-001', name: 'Arroz grano largo',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 20, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-002', name: 'Fideos espagueti',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 10, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-003', name: 'Aceite vegetal',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.LT,
-      minStock: 10, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha', 'produccion'],
-    },
-    {
-      code: 'PRD-004', name: 'Azucar',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 10, wastagePercent: 0,
-      stationNames: ['montaje', 'produccion', 'pasteleria'],
-    },
-    {
-      code: 'PRD-005', name: 'Sal fina',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha', 'produccion', 'pasteleria'],
-    },
-    {
-      code: 'PRD-006', name: 'Harina sin preparar',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 15, wastagePercent: 0,
-      stationNames: ['montaje', 'produccion', 'pasteleria'],
-    },
-    {
-      code: 'PRD-007', name: 'Pan rallado',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 5,
-      stationNames: ['montaje', 'saltado', 'plancha'],
-    },
-    {
-      code: 'PRD-008', name: 'Avena',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje', 'produccion', 'pasteleria'],
-    },
-    {
-      code: 'PRD-009', name: 'Lentejas',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 8, wastagePercent: 0,
-      stationNames: ['montaje', 'produccion'],
-    },
-    {
-      code: 'PRD-010', name: 'Quinoa',
-      categoryId: 'cat-abarrotes', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje', 'produccion'],
-    },
-
-    // ---- Frutas y Verduras (cat-fv) ----------------------------------------
-    {
-      code: 'PRD-011', name: 'Cebolla',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 15, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-012', name: 'Tomate',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 10, wastagePercent: 12,
-      stationNames: ['montaje', 'frio', 'saltado', 'pizzeria', 'produccion'],
-    },
-    {
-      code: 'PRD-013', name: 'Lechuga',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.UN,
-      minStock: 10, wastagePercent: 15,
-      stationNames: ['montaje', 'frio'],
-    },
-    {
-      code: 'PRD-014', name: 'Zanahoria',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 8, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-015', name: 'Papa',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 20, wastagePercent: 12,
-      stationNames: ['montaje', 'saltado', 'plancha', 'produccion'],
-    },
-    {
-      code: 'PRD-016', name: 'Limon',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'saltado', 'plancha'],
-    },
-    {
-      code: 'PRD-017', name: 'Palta',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.UN,
-      minStock: 10, wastagePercent: 10,
-      stationNames: ['montaje', 'frio'],
-    },
-    {
-      code: 'PRD-018', name: 'Pepino',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.UN,
-      minStock: 10, wastagePercent: 8,
-      stationNames: ['montaje', 'frio'],
-    },
-    {
-      code: 'PRD-019', name: 'Ajo',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 3, wastagePercent: 10,
-      stationNames: ['montaje', 'saltado', 'plancha', 'pizzeria', 'produccion'],
-    },
-    {
-      code: 'PRD-020', name: 'Pimiento rojo',
-      categoryId: 'cat-fv', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'saltado', 'pizzeria'],
-    },
-
-    // ---- Carnes y Aves (cat-carnes) ----------------------------------------
-    {
-      code: 'PRD-021', name: 'Pollo entero',
-      categoryId: 'cat-carnes', unit: UnitOfMeasure.KG,
-      minStock: 15, wastagePercent: 8,
-      stationNames: ['montaje', 'saltado', 'plancha', 'produccion'],
-    },
-    {
-      code: 'PRD-022', name: 'Pechuga de pollo',
-      categoryId: 'cat-carnes', unit: UnitOfMeasure.KG,
-      minStock: 10, wastagePercent: 5,
-      stationNames: ['montaje', 'saltado', 'plancha'],
-    },
-    {
-      code: 'PRD-023', name: 'Lomo fino',
-      categoryId: 'cat-carnes', unit: UnitOfMeasure.KG,
-      minStock: 8, wastagePercent: 5,
-      stationNames: ['montaje', 'saltado', 'plancha'],
-    },
-    {
-      code: 'PRD-024', name: 'Carne molida',
-      categoryId: 'cat-carnes', unit: UnitOfMeasure.KG,
-      minStock: 10, wastagePercent: 5,
-      stationNames: ['montaje', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-025', name: 'Costillar cerdo',
-      categoryId: 'cat-carnes', unit: UnitOfMeasure.KG,
-      minStock: 8, wastagePercent: 8,
-      stationNames: ['montaje', 'plancha'],
-    },
-
-    // ---- Pescados y Mariscos (cat-pescados) ---------------------------------
-    {
-      code: 'PRD-026', name: 'Salmon fresco',
-      categoryId: 'cat-pescados', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'plancha'],
-    },
-    {
-      code: 'PRD-027', name: 'Corvina',
-      categoryId: 'cat-pescados', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'plancha'],
-    },
-    {
-      code: 'PRD-028', name: 'Camaron',
-      categoryId: 'cat-pescados', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 8,
-      stationNames: ['montaje', 'frio', 'saltado', 'plancha'],
-    },
-    {
-      code: 'PRD-029', name: 'Pulpo',
-      categoryId: 'cat-pescados', unit: UnitOfMeasure.KG,
-      minStock: 3, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'plancha'],
-    },
-    {
-      code: 'PRD-030', name: 'Mejillones',
-      categoryId: 'cat-pescados', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 12,
-      stationNames: ['montaje', 'frio'],
-    },
-
-    // ---- Lacteos y Huevos (cat-lacteos) ------------------------------------
-    {
-      code: 'PRD-031', name: 'Huevos',
-      categoryId: 'cat-lacteos', unit: UnitOfMeasure.UN,
-      minStock: 60, wastagePercent: 5,
-      stationNames: ['montaje', 'frio', 'saltado', 'plancha', 'produccion', 'pasteleria'],
-    },
-    {
-      code: 'PRD-032', name: 'Leche entera',
-      categoryId: 'cat-lacteos', unit: UnitOfMeasure.LT,
-      minStock: 10, wastagePercent: 5,
-      stationNames: ['montaje', 'frio', 'pasteleria'],
-    },
-    {
-      code: 'PRD-033', name: 'Crema',
-      categoryId: 'cat-lacteos', unit: UnitOfMeasure.LT,
-      minStock: 5, wastagePercent: 8,
-      stationNames: ['montaje', 'frio', 'plancha', 'pasteleria'],
-    },
-    {
-      code: 'PRD-034', name: 'Mantequilla',
-      categoryId: 'cat-lacteos', unit: UnitOfMeasure.KG,
-      minStock: 3, wastagePercent: 5,
-      stationNames: ['montaje', 'plancha', 'pasteleria'],
-    },
-    {
-      code: 'PRD-035', name: 'Queso parmesano',
-      categoryId: 'cat-lacteos', unit: UnitOfMeasure.KG,
-      minStock: 3, wastagePercent: 5,
-      stationNames: ['montaje', 'frio', 'pizzeria', 'pasteleria'],
-    },
-
-    // ---- Panaderia y Pasteleria (cat-panaderia) ----------------------------
-    {
-      code: 'PRD-036', name: 'Harina de trigo',
-      categoryId: 'cat-panaderia', unit: UnitOfMeasure.KG,
-      minStock: 20, wastagePercent: 0,
-      stationNames: ['montaje', 'produccion', 'pasteleria'],
-    },
-    {
-      code: 'PRD-037', name: 'Levadura',
-      categoryId: 'cat-panaderia', unit: UnitOfMeasure.KG,
-      minStock: 2, wastagePercent: 5,
-      stationNames: ['montaje', 'pizzeria', 'pasteleria'],
-    },
-    {
-      code: 'PRD-038', name: 'Mozzarella',
-      categoryId: 'cat-panaderia', unit: UnitOfMeasure.KG,
-      minStock: 8, wastagePercent: 8,
-      stationNames: ['montaje', 'frio', 'pizzeria'],
-    },
-    {
-      code: 'PRD-039', name: 'Masa pizza',
-      categoryId: 'cat-panaderia', unit: UnitOfMeasure.UN,
-      minStock: 20, wastagePercent: 10,
-      stationNames: ['montaje', 'pizzeria'],
-    },
-    {
-      code: 'PRD-040', name: 'Chocolate cobertura',
-      categoryId: 'cat-panaderia', unit: UnitOfMeasure.KG,
-      minStock: 3, wastagePercent: 5,
-      stationNames: ['montaje', 'pasteleria'],
-    },
-
-    // ---- Bebidas y Licores (cat-bebidas) -----------------------------------
-    {
-      code: 'PRD-041', name: 'Agua mineral',
-      categoryId: 'cat-bebidas', unit: UnitOfMeasure.UN,
-      minStock: 24, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-    {
-      code: 'PRD-042', name: 'Jugo naranja',
-      categoryId: 'cat-bebidas', unit: UnitOfMeasure.LT,
-      minStock: 5, wastagePercent: 5,
-      stationNames: ['montaje', 'frio'],
-    },
-    {
-      code: 'PRD-043', name: 'Vino blanco cocina',
-      categoryId: 'cat-bebidas', unit: UnitOfMeasure.LT,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha'],
-    },
-    {
-      code: 'PRD-044', name: 'Cerveza',
-      categoryId: 'cat-bebidas', unit: UnitOfMeasure.UN,
-      minStock: 24, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-    {
-      code: 'PRD-045', name: 'Pisco',
-      categoryId: 'cat-bebidas', unit: UnitOfMeasure.LT,
-      minStock: 3, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-
-    // ---- Salsas y Condimentos (cat-salsas) ---------------------------------
-    {
-      code: 'PRD-046', name: 'Salsa soya',
-      categoryId: 'cat-salsas', unit: UnitOfMeasure.LT,
-      minStock: 3, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado'],
-    },
-    {
-      code: 'PRD-047', name: 'Aceite oliva',
-      categoryId: 'cat-salsas', unit: UnitOfMeasure.LT,
-      minStock: 3, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha', 'pizzeria'],
-    },
-    {
-      code: 'PRD-048', name: 'Vinagre',
-      categoryId: 'cat-salsas', unit: UnitOfMeasure.LT,
-      minStock: 2, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-049', name: 'Oregano',
-      categoryId: 'cat-salsas', unit: UnitOfMeasure.KG,
-      minStock: 1, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha', 'pizzeria'],
-    },
-    {
-      code: 'PRD-050', name: 'Pimienta negra',
-      categoryId: 'cat-salsas', unit: UnitOfMeasure.KG,
-      minStock: 1, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha', 'produccion'],
-    },
-
-    // ---- Pre-elaborados (cat-preelaborado) ----------------------------------
-    {
-      code: 'PRD-051', name: 'Caldo de pollo base',
-      categoryId: 'cat-preelaborado', unit: UnitOfMeasure.LT,
-      minStock: 10, wastagePercent: 5,
-      stationNames: ['montaje', 'saltado', 'produccion'],
-    },
-    {
-      code: 'PRD-052', name: 'Salsa tomate base',
-      categoryId: 'cat-preelaborado', unit: UnitOfMeasure.LT,
-      minStock: 8, wastagePercent: 5,
-      stationNames: ['montaje', 'pizzeria', 'produccion'],
-    },
-    {
-      code: 'PRD-053', name: 'Masa empanada',
-      categoryId: 'cat-preelaborado', unit: UnitOfMeasure.UN,
-      minStock: 30, wastagePercent: 8,
-      stationNames: ['montaje', 'produccion'],
-    },
-    {
-      code: 'PRD-054', name: 'Aliño completo',
-      categoryId: 'cat-preelaborado', unit: UnitOfMeasure.KG,
-      minStock: 3, wastagePercent: 0,
-      stationNames: ['montaje', 'saltado', 'plancha', 'produccion'],
-    },
-    {
-      code: 'PRD-055', name: 'Mise en place verduras',
-      categoryId: 'cat-preelaborado', unit: UnitOfMeasure.KG,
-      minStock: 5, wastagePercent: 10,
-      stationNames: ['montaje', 'frio', 'saltado', 'produccion'],
-    },
-
-    // ---- Limpieza y Descartables (cat-limpieza) ----------------------------
-    {
-      code: 'PRD-056', name: 'Detergente',
-      categoryId: 'cat-limpieza', unit: UnitOfMeasure.LT,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-    {
-      code: 'PRD-057', name: 'Cloro',
-      categoryId: 'cat-limpieza', unit: UnitOfMeasure.LT,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-    {
-      code: 'PRD-058', name: 'Servilletas',
-      categoryId: 'cat-limpieza', unit: UnitOfMeasure.PAQUETES,
-      minStock: 10, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-    {
-      code: 'PRD-059', name: 'Guantes latex',
-      categoryId: 'cat-limpieza', unit: UnitOfMeasure.CAJAS,
-      minStock: 5, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-    {
-      code: 'PRD-060', name: 'Film plastico',
-      categoryId: 'cat-limpieza', unit: UnitOfMeasure.ROLLOS,
-      minStock: 3, wastagePercent: 0,
-      stationNames: ['montaje'],
-    },
-  ];
-
-  // Upsert all products
-  const products: Record<string, string> = {}; // code -> id
-
-  for (const def of productDefs) {
-    const categoryId = categories[def.categoryId]?.id;
+  for (const p of data.products) {
+    const categoryId = categoryMap[p.family];
     if (!categoryId) {
-      throw new Error(`Category not found: ${def.categoryId}`);
+      log(`  WARNING: No category for family "${p.family}", skipping ${p.code}`);
+      continue;
     }
 
+    const deliveryDay = getDeliveryDay(p);
+
     const product = await prisma.product.upsert({
-      where: { code: def.code },
+      where: { code: p.code },
       update: {
-        name: def.name,
-        unitOfMeasure: def.unit,
-        unitOfOrder: def.unit,
-        minStock: def.minStock,
-        wastagePercent: def.wastagePercent,
+        name: p.name,
         categoryId,
+        unitOfMeasure: toUnitEnum(p.unitOfMeasure),
+        unitOfOrder: toUnitEnum(p.unitOfOrder),
+        conversionFactor: p.conversionFactor,
+        deliveryDay,
       },
       create: {
-        code: def.code,
-        name: def.name,
+        code: p.code,
+        name: p.name,
         categoryId,
-        unitOfMeasure: def.unit,
-        unitOfOrder: def.unit,
-        minStock: def.minStock,
-        wastagePercent: def.wastagePercent,
+        unitOfMeasure: toUnitEnum(p.unitOfMeasure),
+        unitOfOrder: toUnitEnum(p.unitOfOrder),
+        conversionFactor: p.conversionFactor,
+        deliveryDay,
       },
     });
 
-    products[def.code] = product.id;
+    productIdMap[p.code] = product.id;
+    productCount++;
   }
 
-  log(`  ${productDefs.length} products upserted.`);
+  log(`  ${productCount} products upserted.`);
 
   // -------------------------------------------------------------------------
-  // 7. StationProducts
+  // 7. Station-Product assignments
   // -------------------------------------------------------------------------
   log('Assigning products to stations...');
 
-  let stationProductCount = 0;
+  // Clear existing station-product links to rebuild cleanly
+  await prisma.stationProduct.deleteMany({});
 
-  for (const def of productDefs) {
-    const productId = products[def.code];
+  let spCount = 0;
+  const spBatch: { stationId: string; productId: string; sortOrder: number }[] = [];
 
-    for (let idx = 0; idx < def.stationNames.length; idx++) {
-      const stationName = def.stationNames[idx];
-      const station = stations[stationName];
-      if (!station) continue;
+  // Track sort order per station
+  const stationSortOrder: Record<string, number> = {};
 
-      await prisma.stationProduct.upsert({
-        where: {
-          stationId_productId: { stationId: station.id, productId },
-        },
-        update: { sortOrder: idx },
-        create: { stationId: station.id, productId, sortOrder: idx },
+  for (const p of data.products) {
+    const productId = productIdMap[p.code];
+    if (!productId) continue;
+
+    const stationIds = getStationAssignments(p);
+
+    for (const stationId of stationIds) {
+      if (!stationSortOrder[stationId]) {
+        stationSortOrder[stationId] = 0;
+      }
+      stationSortOrder[stationId]++;
+
+      spBatch.push({
+        stationId,
+        productId,
+        sortOrder: stationSortOrder[stationId],
       });
-
-      stationProductCount++;
+      spCount++;
     }
   }
 
-  log(`  ${stationProductCount} station-product assignments upserted.`);
+  // Batch insert in chunks of 100
+  const chunkSize = 100;
+  for (let i = 0; i < spBatch.length; i += chunkSize) {
+    const chunk = spBatch.slice(i, i + chunkSize);
+    await prisma.stationProduct.createMany({
+      data: chunk,
+      skipDuplicates: true,
+    });
+  }
+
+  log(`  ${spCount} station-product assignments created.`);
+
+  // Print per-station counts
+  for (const def of stationDefs) {
+    const count = stationSortOrder[def.id] ?? 0;
+    log(`    ${def.name}: ${count} products`);
+  }
 
   // -------------------------------------------------------------------------
   // Done
   // -------------------------------------------------------------------------
-  log('Seed completed successfully.');
+  log('');
+  log('Seed completed successfully!');
   log(`  Organization : 1`);
-  log(`  Locations    : 1`);
+  log(`  Locations    : ${locationDefs.length}`);
   log(`  Stations     : ${stationDefs.length}`);
   log(`  Users        : ${userDefs.length}`);
-  log(`  Categories   : ${categoryDefs.length}`);
-  log(`  Products     : ${productDefs.length}`);
-  log(`  SP links     : ${stationProductCount}`);
+  log(`  Categories   : ${data.families.length}`);
+  log(`  Products     : ${productCount}`);
+  log(`  SP links     : ${spCount}`);
+  log('');
+  log('Login credentials:');
+  log('  Admin:     raymundo@taringuita.cl / admin123');
+  log('  Head Chef: carlos@taringuita.cl / chef123');
+  log('  Head Chef: maria@taringuita.cl / chef123');
+  log('  Sous Chef: pedro@taringuita.cl / sous123');
+  log('  Sous Chef: ana@taringuita.cl / sous123');
 }
 
 main()

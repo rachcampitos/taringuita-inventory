@@ -1,0 +1,5428 @@
+{
+  "families": [
+    "ABARROTES BAR",
+    "ABARROTES COCINA",
+    "ABARROTES PERSONAL",
+    "ABARROTES POSTRES",
+    "Articulos de Oficina",
+    "BOLSAS",
+    "BOLSAS AL VACÍO",
+    "BOWL",
+    "CARNES",
+    "CARNES CARTA",
+    "CARNES PERSONAL",
+    "COPAS",
+    "COPERÍA",
+    "CUCHARAS",
+    "CUCHILLOS",
+    "FIAMBRES",
+    "FRUTAS Y VERDURAS",
+    "JARRO",
+    "LACTEOS PERSONAL",
+    "LÁCTEOS",
+    "MAR CARTA",
+    "MAR PERSONAL",
+    "MATERIALES DELIVERY",
+    "OTROS - CONGELADOS",
+    "OTROS - JUGOS",
+    "OTROS MATERIALES",
+    "PAN",
+    "PAN PERSONAL",
+    "PAPEL",
+    "PAPEL - OTROS MATERIALES",
+    "PESCADO",
+    "PLATOS",
+    "POCILLOS",
+    "POSTRES",
+    "PRE-ELABORADOS",
+    "QUÍMICOS",
+    "SALSAS",
+    "SCHOP",
+    "SHOTS",
+    "SIN CLASIFICAR",
+    "TAZAS",
+    "TENEDORES",
+    "VARIOS",
+    "VASOS"
+  ],
+  "products": [
+    {
+      "code": "102570",
+      "name": "AZUCAR ECONOMICA",
+      "family": "ABARROTES BAR",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103010",
+      "name": "MIEL",
+      "family": "ABARROTES BAR",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102300",
+      "name": "ACEITE DE MARAVILLA BIDON 5 LTS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "102310",
+      "name": "ACEITE DE OLIVA BIDON 5 LTS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "102320",
+      "name": "ACEITE DE SESAMO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "BOTELLAS",
+      "conversionFactor": 250.0
+    },
+    {
+      "code": "102325",
+      "name": "ACEITE DE TRUFA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BOTELLAS",
+      "conversionFactor": 0.25
+    },
+    {
+      "code": "102330",
+      "name": "ACEITE PARA FREIR BIDON",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 10.0
+    },
+    {
+      "code": "102340",
+      "name": "ACEITUNA MORADA AZAPA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BOLSAS",
+      "conversionFactor": 1.0
+    },
+    {
+      "code": "102360",
+      "name": "ACEITUNA SEVILLANA DESHUESADA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BOLSAS",
+      "conversionFactor": 1.0
+    },
+    {
+      "code": "102350",
+      "name": "ACEITUNA SEVILLANA RELLENAS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BOLSAS",
+      "conversionFactor": 1.0
+    },
+    {
+      "code": "102370",
+      "name": "ACETO BALSAMICO BIDON 5 LTS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "105730",
+      "name": "ACHIOTE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0001",
+      "name": "AGAR AGAR",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102400",
+      "name": "AJI DE COLOR",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102410",
+      "name": "AJI EN PASTA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102430",
+      "name": "AJI PANCA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "SOBRES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104710",
+      "name": "AJO EN POLVO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102460",
+      "name": "ALCAPARRAS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "FRASCOS",
+      "conversionFactor": 1.0
+    },
+    {
+      "code": "102470",
+      "name": "ALMENDRA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102505",
+      "name": "ANIS ESTRELLA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102530",
+      "name": "ARROZ BASMATI LA PROUÑA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102510",
+      "name": "ARROZ MIRAFLORES GRADO 1",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102515",
+      "name": "ARROZ SUSHI",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104570",
+      "name": "ARVEJA CONGELADA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102580",
+      "name": "CABELLO DE ANGEL",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102610",
+      "name": "CALDO CONCENTRADO AVE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102620",
+      "name": "CALDO CONCENTRADO CARNE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102630",
+      "name": "CALDO CONCENTRADO VERDURAS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102637",
+      "name": "CANELA EN POLVO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102640",
+      "name": "CANELA ENTERA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102666",
+      "name": "CARDAMOMO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104720",
+      "name": "CEBOLLA EN POLVO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105240",
+      "name": "CHOCLO CONGELADO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102650",
+      "name": "CHOCLO GRANO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102660",
+      "name": "CHOCLO PERUANO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102686",
+      "name": "COLORANTE GEL AMARILLO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102695",
+      "name": "COMINO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102705",
+      "name": "CURCUMA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102720",
+      "name": "CURRY",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104575",
+      "name": "EDAMAME",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102746",
+      "name": "FETUCCINI LUCCHETTI KILO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102770",
+      "name": "GARBANZOS COCINA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102749",
+      "name": "HANAKATSUO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102816",
+      "name": "HARINA TRIPLE \"0\"",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "SACOS",
+      "conversionFactor": 25000.0
+    },
+    {
+      "code": "102706",
+      "name": "HONDASHI (DASHINOMOTO SHIMAYA)",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102820",
+      "name": "HUEVO DE CODORNIZ",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "BANDEJAS",
+      "conversionFactor": 24.0
+    },
+    {
+      "code": "103350",
+      "name": "HUMO LIQUIDO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103009",
+      "name": "JARABE MAPLE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102860",
+      "name": "KETCHUP HEINZ",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BOLSAS",
+      "conversionFactor": 3.0
+    },
+    {
+      "code": "700220",
+      "name": "LASAÑA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103147",
+      "name": "lemmon pepper",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102890",
+      "name": "LEVADURA 125",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 125.0
+    },
+    {
+      "code": "102910",
+      "name": "MAIZ CANCHA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102912",
+      "name": "MANI SIN SAL",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102911",
+      "name": "MANTEQUILLA DE MANI",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "UN",
+      "conversionFactor": 380.0
+    },
+    {
+      "code": "102943",
+      "name": "MASA DE EMPANADA 12CM",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102947",
+      "name": "MASA DE GYOZAS PAQUETE 30 UND",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "PAQUETES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102950",
+      "name": "MAYONESA DELLY",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "BOLSAS",
+      "conversionFactor": 1940.0
+    },
+    {
+      "code": "102980",
+      "name": "MAYONESA KRAFT",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "POTES",
+      "conversionFactor": 789.0
+    },
+    {
+      "code": "103000",
+      "name": "MERKEN",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103015",
+      "name": "MISO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103020",
+      "name": "MIX FRUTOS SECOS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103050",
+      "name": "MOSTAZA DIJON COCINA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "POTES",
+      "conversionFactor": 0.9
+    },
+    {
+      "code": "103060",
+      "name": "MOSTAZA HEINZ",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BOLSAS",
+      "conversionFactor": 1.0
+    },
+    {
+      "code": "103073",
+      "name": "NUEZ MOSCADA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103080",
+      "name": "OREGANO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103100",
+      "name": "PANKO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104583",
+      "name": "PAPA CAMOTE SWEET POTATO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103103",
+      "name": "PAPEL ARROZ",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PAQUETES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103106",
+      "name": "PAPRIKA AHUMADA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 75.0
+    },
+    {
+      "code": "103275",
+      "name": "PASTA AJI COREANO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103120",
+      "name": "PASTA DE CHOCLO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103140",
+      "name": "PEPINILLOS PECERA KNAX",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "FRASCOS",
+      "conversionFactor": 855.0
+    },
+    {
+      "code": "103150",
+      "name": "PIMIENTA NEGRA ENTERA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103152",
+      "name": "PIMIENTA NEGRA MOLIDA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103160",
+      "name": "PIMIENTOS PIQUILLOS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "UN",
+      "conversionFactor": 290.0
+    },
+    {
+      "code": "103165",
+      "name": "PISTACHO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103220",
+      "name": "POROTOS NEGROS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103227",
+      "name": "PURE INSTANTANEO DE PAPA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103240",
+      "name": "QUINOA BLANCA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103250",
+      "name": "QUINOA ROJA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103255",
+      "name": "SAKE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103260",
+      "name": "SAL",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103270",
+      "name": "SAL MAR",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103280",
+      "name": "SALSA BARBACOA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103298",
+      "name": "SALSA DE OSTION PANDA 2,27L",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103310",
+      "name": "SALSA DE PESCADO (FRISH SAUCE)",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104105",
+      "name": "SALSA DE QUESO CHEDDAR",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103315",
+      "name": "SALSA DE TOMATE NATURAL",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103340",
+      "name": "SALSA INGLESA COCINA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103355",
+      "name": "SALSA SPRING ROLL",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.75
+    },
+    {
+      "code": "103359",
+      "name": "semillas maravilla",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103360",
+      "name": "SEMOLA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103370",
+      "name": "SESAMO BLANCO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103380",
+      "name": "SESAMO NEGRO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103390",
+      "name": "SOYA BIDON 5LTS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "103392",
+      "name": "SOYA LEE KUN KKE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103397",
+      "name": "SPAGHETTI 400GRMS",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103335",
+      "name": "SRIRACHA CLASICA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103465",
+      "name": "TEMPURA MIX",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103467",
+      "name": "TOGARASHI",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103470",
+      "name": "TOMATE CUBO LATA DE 3KG",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103480",
+      "name": "TOMATE DESHIDRATADO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105765",
+      "name": "TOMILLO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103487",
+      "name": "TORTILLA DE MAIZ 4\"",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103490",
+      "name": "TORTILLA MEXICANA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 12.0
+    },
+    {
+      "code": "103500",
+      "name": "TRIPLE CONCENTRADO DE TOMATE",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 3.0
+    },
+    {
+      "code": "103520",
+      "name": "VINAGRE 5LTS BLANCO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "103523",
+      "name": "VINAGRE 5LTS DE MANZANA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "103528",
+      "name": "VINAGRE 5LTS TINTO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "BIDONES",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "987654",
+      "name": "VINAGRE BLANCO BOTELLA TRAVERSO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103522",
+      "name": "VINAGRE DE ARROZ",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "UN",
+      "conversionFactor": 298.0
+    },
+    {
+      "code": "103525",
+      "name": "VINAGRE DE JEREZ",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103530",
+      "name": "VINO BLANCO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103540",
+      "name": "VINO TINTO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103533",
+      "name": "WASABI",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "101133",
+      "name": "WHISKY ECONOMICO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "123456",
+      "name": "XANTANA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103535",
+      "name": "YUZU",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "202475",
+      "name": "ALMENDRA LAMINADAS",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102573",
+      "name": "AZUCAR FLOR",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102578",
+      "name": "BASE POSTRE AL GUSTO PANNA COTTA  1 LTS (PANNACOTA)",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102576",
+      "name": "BASE POSTRE DESSERT PER CREM CATALANA 1 LTS",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102579",
+      "name": "BASE POSTRE GOLDEN AL CHOCOLATE  1 LTS (CHOCOLATE)",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102577",
+      "name": "BASE POSTRE GOLDEN MASCARPONE  1 LTS (TIRAMISU)",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102582",
+      "name": "CACAO EN POLVO AMARGO",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102681",
+      "name": "COBERTURA DE CHOCOLATE 72% CACA0",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102682",
+      "name": "COBERTURA DE CHOCOLATE BLANCO",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102684",
+      "name": "COCO RALLADO",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102685",
+      "name": "COLAPEZ",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102732",
+      "name": "ESENCIA DE VAINILLA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102760",
+      "name": "GALLETA CRACKELET",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "102773",
+      "name": "GELATINA EN POLVO DE FRAMBUESA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102772",
+      "name": "GELATINA EN POLVO DE FRUTILLA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102789",
+      "name": "HARINA DE ALMENDRA REFINADA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102863",
+      "name": "LECHE CONDESADA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "TARROS",
+      "conversionFactor": 0.45
+    },
+    {
+      "code": "102870",
+      "name": "LECHE ENTERA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102900",
+      "name": "MAICENA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102914",
+      "name": "MANJAR",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103991",
+      "name": "MANTEQUILLA SIN SAL ANCHOR",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103075",
+      "name": "NUEZ",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103205",
+      "name": "POLVO DE HORNEAR",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "104040",
+      "name": "QUESO CREMA (greenbay)",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103290",
+      "name": "SALSA DE CHOCOLATE 1LT",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102775",
+      "name": "GLUCOSA",
+      "family": "ABARROTES POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103570",
+      "name": "CARNE MOLIDA POSTA (TARTARO)",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103580",
+      "name": "CHOCLILLO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103586",
+      "name": "CHULETON",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103653",
+      "name": "FILETE VACUNO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 2.0
+    },
+    {
+      "code": "103914",
+      "name": "GUANCIALE",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102748",
+      "name": "GYOZAS CHAMPIÑON TRUFADO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102747",
+      "name": "GYOZAS DE CERDO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103670",
+      "name": "HAMBURGUESA CERTIFIED ANGUS BEEF 113 G",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104581",
+      "name": "HAMBURGUESA VEGGIE",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700140",
+      "name": "HUESO CARNUDO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700200",
+      "name": "LONGANIZA",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103703",
+      "name": "MOLIDA ESPECIAL COCINA",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104582",
+      "name": "NOT BURGUER",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103702",
+      "name": "PALETA DE CERDO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103760",
+      "name": "PECHUGA POLLO S/H NACIONAL",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103780",
+      "name": "PLATEADA ANGUS",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103587",
+      "name": "POSTA NEGRA (CORTE CHURRASCO)",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103820",
+      "name": "posta rosada",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103830",
+      "name": "PRIETAS",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103840",
+      "name": "PULPA CERDO MALLA",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "700390",
+      "name": "TRUTRO CORTO",
+      "family": "CARNES CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103916",
+      "name": "JAMON COCIDO",
+      "family": "FIAMBRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103920",
+      "name": "JAMON SERRANO LAMINADO",
+      "family": "FIAMBRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103923",
+      "name": "MORTADELA ITALIANA",
+      "family": "FIAMBRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103940",
+      "name": "PEPPERONI ULTRADELGADO SUGARDALE 5,67 KG",
+      "family": "FIAMBRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103935",
+      "name": "SALAME LAMINADO",
+      "family": "FIAMBRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "103941",
+      "name": "TOCINO",
+      "family": "FIAMBRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105180",
+      "name": "CEBOLLA PERLA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105435",
+      "name": "LAUREL",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103950",
+      "name": "CREMA DE LECHE",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103960",
+      "name": "HUEVOS",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103970",
+      "name": "LECHE DE COCO DEYCO",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "UN",
+      "conversionFactor": 400.0
+    },
+    {
+      "code": "103980",
+      "name": "LECHE GLORIA",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "UN",
+      "conversionFactor": 400.0
+    },
+    {
+      "code": "103990",
+      "name": "MANTEQUILLA",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104000",
+      "name": "QUESO AZUL",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "104043",
+      "name": "QUESO BOCCONCINI",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "UN",
+      "conversionFactor": 125.0
+    },
+    {
+      "code": "104010",
+      "name": "QUESO CAMEMBERT",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "UN",
+      "conversionFactor": 125.0
+    },
+    {
+      "code": "104020",
+      "name": "QUESO CHEDDAR AMERICANO",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "104050",
+      "name": "QUESO DE CABRA",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104055",
+      "name": "QUESO EDAM",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "UN",
+      "conversionFactor": 250.0
+    },
+    {
+      "code": "104060",
+      "name": "QUESO FRESCO",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104061",
+      "name": "QUESO GRANA PADANO",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104063",
+      "name": "QUESO MANTECOS HUENTELAUQUEN",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104065",
+      "name": "QUESO MASCARPONE",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "104070",
+      "name": "QUESO MOZZARELLA",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104100",
+      "name": "QUESO PARMESANO",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "104104",
+      "name": "QUESO PECORINO",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104102",
+      "name": "QUESO RICOTTA",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104110",
+      "name": "YOGURT NATURAL 1LT",
+      "family": "LÁCTEOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104346",
+      "name": "AROS DE CALAMAR",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104130",
+      "name": "ATUN LOMO",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104150",
+      "name": "CAMARON 36/40 SIN CASCARA",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104165",
+      "name": "CAMARON PANCO",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104230",
+      "name": "LOCO",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "FRASCOS",
+      "conversionFactor": 500.0
+    },
+    {
+      "code": "104250",
+      "name": "MACHA MEDIA CONCHA",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "BANDEJAS",
+      "conversionFactor": 20.0
+    },
+    {
+      "code": "104270",
+      "name": "MERLUZA AUSTRAL",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104290",
+      "name": "OSTION CON MEDIA CONCHA",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "104308",
+      "name": "PESCADO LORNA",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104320",
+      "name": "PULPO",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104331",
+      "name": "REINETA FILETE FRESCO",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104350",
+      "name": "VIDRIOLA",
+      "family": "MAR CARTA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105150",
+      "name": "CAMOTE PERUANO",
+      "family": "OTROS - CONGELADOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105350",
+      "name": "FRAMBUESA (FRUTA CONGELADA)",
+      "family": "OTROS - CONGELADOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "101350",
+      "name": "PULPA CONGELADA MANGO",
+      "family": "OTROS - CONGELADOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "GR",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1000.0
+    },
+    {
+      "code": "101400",
+      "name": "NECTAR NARANJA",
+      "family": "OTROS - JUGOS",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0002",
+      "name": "DESMOLDANTES SPRAY",
+      "family": "OTROS MATERIALES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900340",
+      "name": "MANGAS",
+      "family": "OTROS MATERIALES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900390",
+      "name": "PAPEL DE MANTEQUILLA",
+      "family": "OTROS MATERIALES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104365",
+      "name": "PAN BAGUETTE",
+      "family": "PAN",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104370",
+      "name": "PAN BATTARD",
+      "family": "PAN",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104401",
+      "name": "PAN BRIOCHE MOLDE BLANCO",
+      "family": "PAN",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104389",
+      "name": "PAN FRICA",
+      "family": "PAN",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104400",
+      "name": "PAN HAMBURGUESA AMERICANO MARTINS",
+      "family": "PAN",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104404",
+      "name": "PAN MINI BRIOCHE 50 G",
+      "family": "PAN",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104420",
+      "name": "BROWNIE",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104566",
+      "name": "CHEESECAKE BROWNIE",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104425",
+      "name": "CHEESECAKE DE FRAMBUESA",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104465",
+      "name": "CRUMBLE DE MANZANA",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104440",
+      "name": "HELADO DULCE CHIP 5LTS",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "ML",
+      "unitOfOrder": "POTES",
+      "conversionFactor": 5000.0
+    },
+    {
+      "code": "104450",
+      "name": "HELADO FRAMBUEZA 5LTS",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "POTES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "104460",
+      "name": "HELADO VAINILLA 5LTS",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "POTES",
+      "conversionFactor": 5.0
+    },
+    {
+      "code": "104475",
+      "name": "PIE DE LIMON",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104560",
+      "name": "TRES LECHES",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104565",
+      "name": "VOLCAN DE CHOCOLATE",
+      "family": "POSTRES",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102696",
+      "name": "SEMILLA DE COMINO",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0003",
+      "name": "GARAN MASALA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105006",
+      "name": "CACHO DE CABRA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Cocina VITACURA",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE049",
+      "name": "PE_AJO CONFITADO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S002",
+      "name": "SR_ SALSA SEVILLANA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE004",
+      "name": "PE_CAMARON CUARTO FRIO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE005",
+      "name": "PE_CEBOLLA CARAMELIZADA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE040",
+      "name": "PE_QUINOA BLANCA COCIDA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE051",
+      "name": "PE_QUINOA ROJA COCIDA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104580",
+      "name": "POROTOS VERDES",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S012",
+      "name": "SR_ LIMONETA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S016",
+      "name": "SR_ MAYO CILANTRO",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S011",
+      "name": "SR_ SALSA CESAR",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S013",
+      "name": "SR_ SALSA DEL DIA (HAMBURGUESAS)",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S014",
+      "name": "SR_ SALSA PARRILLERA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S003",
+      "name": "SR_ SALSA MANGO JENGIBRE",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE037",
+      "name": "JUGO DE LIMON MALLA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NV0038",
+      "name": "POLLO SATAY",
+      "family": "CARNES",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.2
+    },
+    {
+      "code": "103120-1",
+      "name": "PASTELERA 250GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE006",
+      "name": "PE_LOCO PORCION",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.12
+    },
+    {
+      "code": "PE042",
+      "name": "PE_OSTIONES",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.38
+    },
+    {
+      "code": "PE039",
+      "name": "PE_MACHAS LIMPIAS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104331-1",
+      "name": "REINETA FRESCA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE087",
+      "name": "BASMATI",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "CA6917",
+      "name": "STEAK TARTAR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "NV0037",
+      "name": "COLIFLOR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PC304724",
+      "name": "CROQUETA DE JAMÓN SERRANO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104583-1",
+      "name": "PAPA CAMOTE  300GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103587-1",
+      "name": "CHURRASCO 150GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NV0029_3",
+      "name": "CAMARON MEDITERRANEO",
+      "family": "PESCADO",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.05
+    },
+    {
+      "code": "2080",
+      "name": "CRUDO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NV0029-2",
+      "name": "FILETE MEDITERRANEO",
+      "family": "CARNES",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.08
+    },
+    {
+      "code": "PE011",
+      "name": "PE_ATUN LOMO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "PE053",
+      "name": "PE_FALAFEL",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.16
+    },
+    {
+      "code": "NV0029",
+      "name": "POLLO MEDITERRANEO",
+      "family": "CARNES",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.08
+    },
+    {
+      "code": "104575-1",
+      "name": "EDAMAME 250GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE059",
+      "name": "PE_MECHADA PORCION 180GRMS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.18
+    },
+    {
+      "code": "103653-1",
+      "name": "LOMO SALTEADO 170 GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.17
+    },
+    {
+      "code": "104370-1",
+      "name": "pan batard",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0004",
+      "name": "QUINUA COCIDA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103780-1",
+      "name": "PLATEADA 200GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE091",
+      "name": "FISH AND CHIPS 180 GRS",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.18
+    },
+    {
+      "code": "10530",
+      "name": "FILETE MERLUZA 180 GRS",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.18
+    },
+    {
+      "code": "PE007",
+      "name": "PE_MASA DE PIZZAS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.3
+    },
+    {
+      "code": "PE014",
+      "name": "PE_POLLO (CRUDO)",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.18
+    },
+    {
+      "code": "103830-1",
+      "name": "morcilla",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103810",
+      "name": "pollo cocido deshilachado",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105100",
+      "name": "BETERRAGA COCIDA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NV0041",
+      "name": "CALDERETA",
+      "family": "CARNES",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S047",
+      "name": "MAYO SIRACHA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0005",
+      "name": "MIXTURA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE147",
+      "name": "PATE DE HONGOS",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE001",
+      "name": "PE_AROS DE CEBOLLA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE041",
+      "name": "PE_ARROZ COCIDO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE060",
+      "name": "PE_ARROZ COCIDO CON OLIVA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE028",
+      "name": "PE_ASADO DE TIRA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.5
+    },
+    {
+      "code": "PE002",
+      "name": "PE_ASADO DE TIRA (COCIDO)",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.5
+    },
+    {
+      "code": "PE010",
+      "name": "PE_ATUN TATAKI",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.11
+    },
+    {
+      "code": "PE003",
+      "name": "PE_CAMARON CUARTO CALIENTE",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE050",
+      "name": "PE_CARNE HAMBURGUESA 25%EACH",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "PE031",
+      "name": "PE_CEBOLLA FUGAZZA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE044",
+      "name": "PE_CEBOLLA PEPINILLO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE032",
+      "name": "PE_CHAMPIÑONES AL AJILLO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE062",
+      "name": "PE_COLESLAW",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE027",
+      "name": "PE_COSTILLAR AHUMADO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.4
+    },
+    {
+      "code": "PE026",
+      "name": "PE_ENTRAÑA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.28
+    },
+    {
+      "code": "PE021",
+      "name": "PE_HAMBURGUESA TENNESSE",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.2
+    },
+    {
+      "code": "PE056",
+      "name": "PE_INFUSION DE CITRICOS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.002
+    },
+    {
+      "code": "PE055",
+      "name": "PE_INFUSION MENTA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.002
+    },
+    {
+      "code": "PE043",
+      "name": "PE_JENGIBRE LICUADO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE038",
+      "name": "PE_JUGO DE LIMON PICA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE008",
+      "name": "PE_MECHADA POKE",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "PE058",
+      "name": "PE_MEDIO POLLO ASADO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE046",
+      "name": "PE_MIX DE VERDURAS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE063",
+      "name": "PE_PAN MOLDE BLANCO REBANADA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 24.0
+    },
+    {
+      "code": "PE020",
+      "name": "PE_PAPAS FRITAS (TARINGA)",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE052",
+      "name": "PE_PAPAS FRITAS CHILOTAS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "PE029",
+      "name": "PE_PIEL DE PAPA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE057",
+      "name": "PE_POLLO ASADO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE012",
+      "name": "PE_PULPO COCIDO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.14
+    },
+    {
+      "code": "PE015",
+      "name": "PE_QUESADILLAS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PORCIONES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE024",
+      "name": "PE_REINETA CHICHARRON",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.2
+    },
+    {
+      "code": "PE025",
+      "name": "PE_REINETA FILETE",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.18
+    },
+    {
+      "code": "PE016",
+      "name": "PE_TARTARO DE PULPO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE054",
+      "name": "PE_TE BOLSA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PORCIONES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE061",
+      "name": "PE_TOCINO COCIDO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE030",
+      "name": "PE_TOMATE CONFITE",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE033",
+      "name": "PE_TOMATE PARMENTIER",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE048",
+      "name": "PE_TORTA 3 LECHES KILO",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PORCIONES",
+      "conversionFactor": 11.0
+    },
+    {
+      "code": "PE023",
+      "name": "PE_Tortilla Mexicana",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PORCIONES",
+      "conversionFactor": 12.0
+    },
+    {
+      "code": "PE018",
+      "name": "PE_VIDRIOLA",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "PE034",
+      "name": "PE_ZAPALLO ITALIANO 4TO CALIENTE",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0006",
+      "name": "POLLO DESHILACHADO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "S005",
+      "name": "POMODORO PIZZA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NV0016",
+      "name": "PORCION TABLA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE035",
+      "name": "POROTOS NEGROS",
+      "family": "PRE-ELABORADOS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104320-1",
+      "name": "PULPO PARRILLA 170GR",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S039",
+      "name": "SALSA MARISCO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S40",
+      "name": "SALSA PESTO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S010",
+      "name": "SR_ COCO JENGIBRE",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S009",
+      "name": "SR_ COCO MANGO",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S017",
+      "name": "SR_ GUACAMOLE",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S018",
+      "name": "SR_ JARABE DE GOMA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S006",
+      "name": "SR_ LECHE DE TIGRE",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S015",
+      "name": "SR_ MAYO POROTO",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S019",
+      "name": "SR_ SALSA DE BERRIES",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S004",
+      "name": "SR_ SALSA GRIEGA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S007",
+      "name": "SR_ SALSA MANGO ACETO",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S001",
+      "name": "SR_ SALSA ROQUEFORD",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S008",
+      "name": "SR_ SALSA TARTARA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S020",
+      "name": "SR_ SALSA THAI",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S023",
+      "name": "SR_CREMA ACIDA",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S022",
+      "name": "SR_SALSA LAS PAPAS",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "S021",
+      "name": "SR_SALSA SMASH",
+      "family": "SALSAS",
+      "sheet": "Procesado",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE178",
+      "name": "RELLENO DR GYOZAS",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "PE187",
+      "name": "RELLENO DE NEMS",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Procesado",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700010",
+      "name": "ARROZ MIRAFLORES GRADO 1",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104570-1",
+      "name": "arverja partida no congelada tipo legumbre",
+      "family": "ABARROTES COCINA",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700020",
+      "name": "ATUN LOMO AL AGUA ECONOMICO",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700050",
+      "name": "CAFÉ PERSONAL (400 GRS.)",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700080",
+      "name": "CHULETA VETADA PERSONAL",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700090",
+      "name": "CHURRASCO PERSONAL",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102750",
+      "name": "FIDEO CORBATA",
+      "family": "ABARROTES COCINA",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700130",
+      "name": "HAMBUERGUESAS PERSONAL",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700150",
+      "name": "JAMON LAMINADO",
+      "family": "LACTEOS PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "SOBRES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700170",
+      "name": "JUGO SOBRE",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700180",
+      "name": "LASAÑA",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700190",
+      "name": "LENTEJAS",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700200-1",
+      "name": "LONGANIZA",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700210",
+      "name": "MERLUZA PER",
+      "family": "MAR PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700220-1",
+      "name": "MOLIDA ESPECIAL PERSONAL",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700230",
+      "name": "OSOBUCO",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104383",
+      "name": "PAN COMPLETO",
+      "family": "PAN",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700240",
+      "name": "PAN MARRAQUETA",
+      "family": "PAN PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700290",
+      "name": "POROTO BURRO",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700300",
+      "name": "POROTO CONGELADO",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700310",
+      "name": "PRIMAVERA CONGELADA",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700320",
+      "name": "PULPA DE CERDO PERSONAL",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700340",
+      "name": "QUESO GOUDA LAMINADO",
+      "family": "LACTEOS PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700345",
+      "name": "REINETA PERSONAL",
+      "family": "MAR PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700350",
+      "name": "SPAGHETTI",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PAQUETES",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700360",
+      "name": "TE PERSONAL",
+      "family": "ABARROTES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700370",
+      "name": "TUTO ENTERO GRANDE",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700390-1",
+      "name": "TUTRO CORTO",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "700400",
+      "name": "VIENESA",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103820-1",
+      "name": "POSTA NEGRA",
+      "family": "CARNES PERSONAL",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103220-1",
+      "name": "POROTOS NEGROS",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Personal",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0007",
+      "name": "ASIENTO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0008",
+      "name": "POSTA ROSADA",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0009",
+      "name": "PALETA DE CERDO",
+      "family": "SIN CLASIFICAR",
+      "sheet": "Personal",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105000",
+      "name": "AJI AMARILLO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105005",
+      "name": "AJI MIRASOL",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105020",
+      "name": "AJI PANCA GRANEL",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105030",
+      "name": "AJI VERDE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105040",
+      "name": "AJO PELADO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105050",
+      "name": "ALBAHACA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105060",
+      "name": "APIO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105070",
+      "name": "ARANDANO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104570-2",
+      "name": "ARVEJAS CONGELADA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105085",
+      "name": "BERENJENAS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105100-1",
+      "name": "BETERRAGA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105110",
+      "name": "BROCOLI",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.4
+    },
+    {
+      "code": "105120",
+      "name": "BROTE ALFALFA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BANDEJAS",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "105140",
+      "name": "BROTES DE FRIJOL CHINO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BANDEJAS",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "105150-1",
+      "name": "CAMOTE PERUANO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105160",
+      "name": "CEBOLLA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105170",
+      "name": "CEBOLLA MORADA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105190",
+      "name": "CEBOLLIN",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.3
+    },
+    {
+      "code": "102819",
+      "name": "HONGO OSTRA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105210",
+      "name": "CHAMPIÑON PARIS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105215",
+      "name": "CHAMPIÑON PORTOBELLO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "102660-1",
+      "name": "CHOCLO PERUANO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105260",
+      "name": "CIBOULETTE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.01
+    },
+    {
+      "code": "105270",
+      "name": "CILANTRO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105280",
+      "name": "CILANTRO PROCESADO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105700",
+      "name": "COL MORADA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.8
+    },
+    {
+      "code": "105699",
+      "name": "COL VERDE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.8
+    },
+    {
+      "code": "105285",
+      "name": "COLIFLOR",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.8
+    },
+    {
+      "code": "105305",
+      "name": "ENELDO FRESCO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105320",
+      "name": "ESPINACA HOJA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105340",
+      "name": "FLORES COMESTIBLES PAQUETE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "BANDEJAS",
+      "conversionFactor": 0.15
+    },
+    {
+      "code": "105353",
+      "name": "FRAMBUESA (FRUTA)",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105360",
+      "name": "FRUTILLA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105370",
+      "name": "GOLDEN BERRY",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105375",
+      "name": "HABAS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105390",
+      "name": "HOJAS DE BETARRAGA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105400",
+      "name": "HUACATAY",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105410",
+      "name": "JENGIBRE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105440",
+      "name": "LECHUGA ESCAROLA C/RESOLUC",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.35
+    },
+    {
+      "code": "105450",
+      "name": "LECHUGA HIDROPÓNICA ROSA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "105460",
+      "name": "LECHUGA HIDROPONICA VERDE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "105860",
+      "name": "LECHUGA LOLLO ROSA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "105850",
+      "name": "LECHUGA LOLLO VERDE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.1
+    },
+    {
+      "code": "105462",
+      "name": "LIMON DE PICA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105461",
+      "name": "LIMON MALLA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "MALLAS",
+      "conversionFactor": 18.0
+    },
+    {
+      "code": "105462-1",
+      "name": "LIMÓN PICA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105471",
+      "name": "LIMON SUTIL",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105470",
+      "name": "MANGO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105480",
+      "name": "MANZANA FUJI",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105490",
+      "name": "MANZANA ROJA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105500",
+      "name": "MANZANA VERDE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105510",
+      "name": "MENTA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105890",
+      "name": "MICROGREENS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105870",
+      "name": "MIX BABY TEXAS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105520",
+      "name": "NARANJA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105530",
+      "name": "PALTA HASS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105540",
+      "name": "PAPA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105541",
+      "name": "PAPA CHILOTA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105543",
+      "name": "PAPAS ASTERIX ECO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105570",
+      "name": "PEPINO ALASKA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.6
+    },
+    {
+      "code": "105580",
+      "name": "PEPINO ENSALADA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.4
+    },
+    {
+      "code": "105590",
+      "name": "PEREJIL",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105620",
+      "name": "PIMENTON ROJO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.25
+    },
+    {
+      "code": "105610",
+      "name": "PIMIENTO AMARILLO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.25
+    },
+    {
+      "code": "105630",
+      "name": "PIMIENTO VERDE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.25
+    },
+    {
+      "code": "105640",
+      "name": "PIÑA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 0.9
+    },
+    {
+      "code": "105650",
+      "name": "PLATANO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105670",
+      "name": "POMELO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "104580-1",
+      "name": "POROTOS VERDES",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105680",
+      "name": "RÁBANO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105690",
+      "name": "REMOLACHA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105701",
+      "name": "REPOLLO MORADO JULIANA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105710",
+      "name": "ROCOTO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105715",
+      "name": "ROMERO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105720",
+      "name": "RUCULA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105725",
+      "name": "SANDIA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105730-1",
+      "name": "SEMILLA ACHIOTE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105735",
+      "name": "SEMILLA DE HINOJO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105900",
+      "name": "SETAS DESHIDRATADAS",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105740",
+      "name": "TOMATE",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105750",
+      "name": "TOMATE COCKTAIL",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105765-1",
+      "name": "TOMILLO FRESCO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105790",
+      "name": "ZANAHORIA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105810",
+      "name": "ZAPALLO AMARILLO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105820",
+      "name": "ZAPALLO ITALIANO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105600",
+      "name": "PEREJIL CRESPO",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "105006-1",
+      "name": "AJI CACHO DE CABRA",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0010",
+      "name": "papa amarilla",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0011",
+      "name": "ajo chino",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "KG",
+      "unitOfOrder": "KG",
+      "conversionFactor": 1
+    },
+    {
+      "code": "103524",
+      "name": "vinagre de higo",
+      "family": "FRUTAS Y VERDURAS",
+      "sheet": "Futas y Verduras",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800040",
+      "name": "ATOMIZADOR",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800060",
+      "name": "BOLSAS DE BASURA 50X70X0,03",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800070",
+      "name": "BOLSAS DE BASURA 70X90X0,03",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800080",
+      "name": "BOLSAS DE BASURA 80X110",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800090",
+      "name": "BOLSAS DE BASURA GRANDE 120*150",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800100",
+      "name": "BOLSAS DE BASURA GRANDE 140*160",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800110",
+      "name": "BOLSAS PREPICADA 20X30",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "ROLLOS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800120",
+      "name": "BOLSAS PREPICADA 30X40",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "ROLLOS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800130",
+      "name": "BOLSAS PREPICADA 40X60",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "ROLLOS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800140",
+      "name": "BOLSAS PREPICADA 50X70",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "ROLLOS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800150",
+      "name": "BOLSAS PREPICADA 60X90",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "ROLLOS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800170",
+      "name": "CLORO 3%",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800180",
+      "name": "COFIA",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800190",
+      "name": "DESENGRASANTE",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800280",
+      "name": "ESCOBILLON",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800290",
+      "name": "ESPONJA BONOGRIL ACAN. NOR",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800310",
+      "name": "ESPONJAS BONOGRIL ABRASIVA",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800320",
+      "name": "FILM PVC 30 X 1400",
+      "family": "BOLSAS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800330",
+      "name": "GUANTE AMARILLO O VERDE L",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800340",
+      "name": "GUANTE EXAM. VINILO AZUL M",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800350",
+      "name": "GUANTE EXAM. VINILO AZUL TALLA L",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800410",
+      "name": "JABON MANOS CLIENTE",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800430",
+      "name": "LAVALOZA",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "LT",
+      "unitOfOrder": "LT",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800440",
+      "name": "LIMPIAPISO CON AROMATIZADOR LYSOL",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800490",
+      "name": "MONDADIENTES (CAJA COMPLETA)",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800510",
+      "name": "PALA",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800530",
+      "name": "PAÑO AMARILLO MULTIUSO",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800540",
+      "name": "PAÑO MULTIUSO HÚMEDO ABSOR",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800560",
+      "name": "PAPEL ALUMUNIO 30 X 100",
+      "family": "PAPEL",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "ROLLOS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800570",
+      "name": "PAPEL HIGIÉNICO 250 MTS.",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800590",
+      "name": "PASTILLAS DE HORNO AZULES",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800600",
+      "name": "PASTILLAS DE HORNO ROJAS",
+      "family": "QUÍMICOS",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800630",
+      "name": "TOALLA DE PAPEL 200 MTS HOJA SIMPLE GRUESO",
+      "family": "PAPEL",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800650",
+      "name": "TOALLA PAPEL INTERFOLIADA DOBLE",
+      "family": "PAPEL",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800660",
+      "name": "TRAPERO SIMP. 50X70 C/OJAL",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "800670",
+      "name": "VIRUTILLA METALICA",
+      "family": "COPERÍA",
+      "sheet": "Aseo",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900050",
+      "name": "BOLSA KRAFT MARRON 26X16X30 KM",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900060",
+      "name": "BOLSA KRAFT MARRON 33X17X41 KM",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900070",
+      "name": "BOLSAS AL VACIO 240X150",
+      "family": "BOLSAS AL VACÍO",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900080",
+      "name": "BOLSAS AL VACIO 250X200",
+      "family": "BOLSAS AL VACÍO",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900090",
+      "name": "BOLSAS AL VACIO 340X250",
+      "family": "BOLSAS AL VACÍO",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900130",
+      "name": "BOWL KRAFT 1300",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900140",
+      "name": "BOWL KRAFT 600",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900180",
+      "name": "CAJA HAMBURGUESAS LAS PAPAS",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900190",
+      "name": "CAJA HAMBURGUESAS LAS PAPAS XL",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900200",
+      "name": "CAJA KRAFT DELIVERY M",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900210",
+      "name": "CAJAS PIZZAS 34X34",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900250",
+      "name": "CENTRIFUGA DE VERDURAS 2 LTS",
+      "family": "VARIOS",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900330",
+      "name": "GAS BUTANO",
+      "family": "VARIOS",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900340-1",
+      "name": "MANGAS",
+      "family": "VARIOS",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900350",
+      "name": "MAQUINA SELLADORA DE BOLSAS",
+      "family": "VARIOS",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900360",
+      "name": "PALITOS DE BAMBU",
+      "family": "VARIOS",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900380",
+      "name": "PAPEL MANTEQUILLA HAMBURGUESAS",
+      "family": "PAPEL - OTROS MATERIALES",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900390-1",
+      "name": "PAPEL MANTEQUILLA IMPRESO",
+      "family": "PAPEL - OTROS MATERIALES",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900400",
+      "name": "POCILLO PARA SALSA 2 OZ (2500 UXC)",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900450",
+      "name": "SERVILLETA KRAFT 40X40",
+      "family": "PAPEL - OTROS MATERIALES",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900540",
+      "name": "TAPA PARA BOWL 1300",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900550",
+      "name": "TAPA PARA BOWL 600",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "CAJAS",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900560",
+      "name": "TAPA PARA POCILLO 2 OZ (2500 UXC)",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "900690",
+      "name": "VASO POLIPAPEL 16OZ",
+      "family": "MATERIALES DELIVERY",
+      "sheet": "Otros Materiales",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0012",
+      "name": "Bowl redondo porcelana blanco 13cm",
+      "family": "BOWL",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0013",
+      "name": "Pocillo Soufe Blanco 11,5cm star",
+      "family": "POCILLOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0014",
+      "name": "Pocillo Soufe Blanco 9cm star",
+      "family": "POCILLOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0015",
+      "name": "Plato bajo porcelana blanco 20cm star round",
+      "family": "PLATOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0016",
+      "name": "Cuchara mesa livorno (12/600)",
+      "family": "CUCHARAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0017",
+      "name": "Copa vidrio balon 655cc ENOTECA PASABAHCE",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0018",
+      "name": "Vaso vidrio bajo Lyric 370cc PASABAHCE",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0019",
+      "name": "Vaso vidrio shot timeless 60cc PASABAHCE",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0020",
+      "name": "Copa vidrio margarita Capri 305cc PASABAHCE",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0021",
+      "name": "Copa Vidrio Flauta V_Line 150cc PASABAHCE",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0022",
+      "name": "Copa Vino 474ml",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0023",
+      "name": "Set 6 Un. Tenedores polywood rojo tramontina",
+      "family": "TENEDORES",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PAQUETES",
+      "conversionFactor": 6.0
+    },
+    {
+      "code": "NC-0024",
+      "name": "Set 6 Un. Cuchillo Chuletero polywood rojo tramontina",
+      "family": "CUCHILLOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "PAQUETES",
+      "conversionFactor": 6.0
+    },
+    {
+      "code": "NC-0025",
+      "name": "Vaso vidrio cerveza irlanda 550cc",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0026",
+      "name": "Cuchara coctel porcelana blanca 12cm",
+      "family": "CUCHARAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0027",
+      "name": "Plato gota bajo porcelana blanco 25cm STAR",
+      "family": "PLATOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0028",
+      "name": "Plato redondo porcelana blanco 28cm",
+      "family": "PLATOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0029",
+      "name": "Pocillo mantequilla salsa 7cm",
+      "family": "POCILLOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0030",
+      "name": "Copa MISTRAL",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0031",
+      "name": "Copas de Espumante",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0032",
+      "name": "Copas de Gin befeter",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0033",
+      "name": "Copas de Gin Bombay",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0034",
+      "name": "Copas de Gin Tanqueray",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0035",
+      "name": "Copas de vino",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0036",
+      "name": "Copas Margarita",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0037",
+      "name": "Copas Martini",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0038",
+      "name": "Copas Spritz ramazotti",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0039",
+      "name": "Garzas Daiquiris",
+      "family": "COPAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0040",
+      "name": "Jarro Moscow Mule",
+      "family": "JARRO",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0041",
+      "name": "Jarros Sangría",
+      "family": "JARRO",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0042",
+      "name": "Shop 330 cc ESTRELLA",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0043",
+      "name": "Shop 500 cc ESTRELLA",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0044",
+      "name": "SHOP 500 CC LIWY",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0045",
+      "name": "SHOP 500 CC LIWY",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0046",
+      "name": "shop Torobayo",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0047",
+      "name": "Shots de Tequila",
+      "family": "SHOTS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0048",
+      "name": "Sour Peruano Gobernador",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0049",
+      "name": "Vaso Ariki Tiki",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0050",
+      "name": "Vaso Cuate",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0051",
+      "name": "Vaso Don Gin",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0052",
+      "name": "Vaso Don Luis",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0053",
+      "name": "Vaso Frutillar",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0054",
+      "name": "Vaso Maracumbia",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0055",
+      "name": "Vaso whisky",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0056",
+      "name": "Vaso República",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0057",
+      "name": "Vaso Vieja Escuela",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0058",
+      "name": "Vasos Caipiriñas",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0059",
+      "name": "Vasos de Destilado",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0060",
+      "name": "Vasos te",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0061",
+      "name": "Vasos Mojito",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0062",
+      "name": "Vasos Sour Kappa",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0063",
+      "name": "Vasos Sour Peruano",
+      "family": "VASOS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0064",
+      "name": "Shop 330 cc tumbler",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0065",
+      "name": "Shop 500 cc royal",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0066",
+      "name": "SHOP 500 CC ROYAL IPA",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0067",
+      "name": "SHOP 500 CC",
+      "family": "SCHOP",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0068",
+      "name": "TAZAS 200 CC",
+      "family": "TAZAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0069",
+      "name": "TAZAS DE ESPRESSOS",
+      "family": "TAZAS",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0070",
+      "name": "Jarras ramazzotti",
+      "family": "JARRO",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0071",
+      "name": "brochetas medianas",
+      "family": "OTROS MATERIALES",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0072",
+      "name": "ganchitos cocteleros",
+      "family": "OTROS MATERIALES",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0073",
+      "name": "Maquina DESHIDRATADORA",
+      "family": "OTROS MATERIALES",
+      "sheet": "Cuchillería y Cristalería",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0074",
+      "name": "Rollo Impresora",
+      "family": "Articulos de Oficina",
+      "sheet": "Articulos de Oficina",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0075",
+      "name": "Rollo Transbank",
+      "family": "Articulos de Oficina",
+      "sheet": "Articulos de Oficina",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0076",
+      "name": "Comandas (Talonarios)",
+      "family": "Articulos de Oficina",
+      "sheet": "Articulos de Oficina",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0077",
+      "name": "Lapices (QUE TIPO DE LAPIZ?)",
+      "family": "Articulos de Oficina",
+      "sheet": "Articulos de Oficina",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    },
+    {
+      "code": "NC-0078",
+      "name": "Sobre Cartas",
+      "family": "Articulos de Oficina",
+      "sheet": "Articulos de Oficina",
+      "unitOfMeasure": "UN",
+      "unitOfOrder": "UN",
+      "conversionFactor": 1
+    }
+  ],
+  "stats": {
+    "totalProducts": 596,
+    "totalFamilies": 44,
+    "bySheet": {
+      "Cocina VITACURA": 232,
+      "Procesado": 113,
+      "Personal": 34,
+      "Futas y Verduras": 90,
+      "Aseo": 36,
+      "Otros Materiales": 24,
+      "Cuchillería y Cristalería": 62,
+      "Articulos de Oficina": 5
+    }
+  }
+}

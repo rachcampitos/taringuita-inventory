@@ -22,6 +22,9 @@ const PRODUCT_SELECT = {
   minStock: true,
   maxStock: true,
   wastagePercent: true,
+  unitCost: true,
+  supplier: true,
+  deliveryDay: true,
   isActive: true,
   createdAt: true,
   updatedAt: true,
@@ -29,6 +32,7 @@ const PRODUCT_SELECT = {
 
 export interface FindAllProductsQuery {
   categoryId?: string;
+  category?: string;
   search?: string;
   isActive?: boolean;
   page?: number;
@@ -68,6 +72,9 @@ export class ProductsService {
         maxStock: dto.maxStock ?? null,
         wastagePercent: dto.wastagePercent ?? 0,
         isActive: dto.isActive ?? true,
+        unitCost: dto.unitCost ?? null,
+        supplier: dto.supplier ?? null,
+        deliveryDay: dto.deliveryDay ?? null,
       },
       select: PRODUCT_SELECT,
     });
@@ -80,6 +87,7 @@ export class ProductsService {
   async findAll(query: FindAllProductsQuery) {
     const {
       categoryId,
+      category,
       search,
       isActive,
       page = 1,
@@ -93,6 +101,8 @@ export class ProductsService {
 
     if (categoryId) {
       where.categoryId = categoryId;
+    } else if (category) {
+      where.category = { name: { equals: category, mode: 'insensitive' } };
     }
 
     if (isActive !== undefined) {
@@ -285,6 +295,68 @@ export class ProductsService {
       skipped: skippedCodes.length,
       skippedCodes,
     };
+  }
+
+  // ------------------------------------------------------------------
+  // Read – category names for filter dropdown
+  // ------------------------------------------------------------------
+
+  async getCategoryNames(): Promise<string[]> {
+    const categories = await this.prisma.productCategory.findMany({
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      select: { name: true },
+    });
+    return categories.map((c) => c.name);
+  }
+
+  // ------------------------------------------------------------------
+  // Update price + create history entry
+  // ------------------------------------------------------------------
+
+  async updatePrice(
+    id: string,
+    unitCost: number,
+    notes?: string,
+  ) {
+    await this.findOne(id);
+
+    const [product] = await this.prisma.$transaction([
+      this.prisma.product.update({
+        where: { id },
+        data: { unitCost },
+        select: PRODUCT_SELECT,
+      }),
+      this.prisma.productPriceHistory.create({
+        data: {
+          productId: id,
+          unitCost,
+          notes: notes ?? null,
+        },
+      }),
+    ]);
+
+    return product;
+  }
+
+  // ------------------------------------------------------------------
+  // Price history
+  // ------------------------------------------------------------------
+
+  async getPriceHistory(id: string, limit = 20) {
+    await this.findOne(id);
+
+    return this.prisma.productPriceHistory.findMany({
+      where: { productId: id },
+      orderBy: { effectiveFrom: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        unitCost: true,
+        effectiveFrom: true,
+        notes: true,
+        createdAt: true,
+      },
+    });
   }
 
   // ------------------------------------------------------------------

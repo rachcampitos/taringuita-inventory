@@ -33,4 +33,9 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   organizationId: string;
+
+  @ApiPropertyOptional({ example: 'cuid_of_location' })
+  @IsString()
+  @IsOptional()
+  locationId?: string;
 }

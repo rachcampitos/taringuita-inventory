@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Utensils,
   Package,
+  ShoppingCart,
   Settings,
   LogOut,
   UtensilsCrossed,
@@ -27,6 +28,7 @@ const navItems: NavItem[] = [
   { href: "/inventory", label: "Inventario", icon: ClipboardList },
   { href: "/production", label: "Produccion", icon: Utensils },
   { href: "/products", label: "Productos", icon: Package, adminOnly: true },
+  { href: "/orders", label: "Pedidos", icon: ShoppingCart, adminOnly: true },
   { href: "/settings", label: "Configuracion", icon: Settings, adminOnly: true },
 ];
 
@@ -180,7 +182,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         aria-label="Navegacion principal"
         className="md:hidden fixed bottom-0 inset-x-0 z-20 bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 flex"
       >
-        {visibleItems.slice(0, 4).map((item) => {
+        {visibleItems.slice(0, 5).map((item) => {
           const Icon = item.icon;
           const isActive =
             pathname === item.href || pathname.startsWith(`${item.href}/`);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import {
   ChevronDown,
   Plus,
@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -25,8 +26,9 @@ interface Product {
   id: string;
   code: string;
   name: string;
-  category: string;
-  unit: string;
+  unitOfMeasure: string;
+  sortOrder: number;
+  category: { id: string; name: string };
 }
 
 interface ProductionItem {
@@ -62,6 +64,22 @@ export default function ProductionPage() {
   const [isLoadingStations, setIsLoadingStations] = useState(true);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const dropdownContainerRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!openDropdown) return;
+    const handleClick = (e: MouseEvent) => {
+      if (
+        dropdownContainerRef.current &&
+        !dropdownContainerRef.current.contains(e.target as Node)
+      ) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [openDropdown]);
 
   // Load stations
   useEffect(() => {
@@ -96,10 +114,10 @@ export default function ProductionPage() {
     const load = async () => {
       setIsLoadingProducts(true);
       try {
-        const { data } = await api.get<Product[]>(
-          `/stations/${selectedStation}/products`
+        const { data } = await api.get<{ stationId: string; stationName: string; products: Product[] }>(
+          `/products/by-station/${selectedStation}`
         );
-        setProducts(data);
+        setProducts(data.products);
       } catch (err) {
         if (err instanceof ApiError) showError(err.message);
         else showError("No se pudieron cargar los productos.");
@@ -149,6 +167,8 @@ export default function ProductionPage() {
     [items]
   );
 
+  useUnsavedChanges(validItems.length > 0);
+
   const handleSave = async () => {
     if (!selectedStation) return;
 
@@ -161,11 +181,11 @@ export default function ProductionPage() {
     try {
       await api.post("/production/log/bulk", {
         stationId: selectedStation,
+        date: new Date().toISOString().slice(0, 10),
         items: validItems.map((item) => ({
           productId: item.productId,
-          quantity: item.quantity,
+          quantityProduced: item.quantity,
           notes: item.notes.trim() || undefined,
-          producedAt: new Date().toISOString(),
         })),
       });
       success(`Produccion registrada: ${validItems.length} items.`, 5000);
@@ -184,7 +204,7 @@ export default function ProductionPage() {
   };
 
   const getProductUnit = (productId: string): string => {
-    return products.find((p) => p.id === productId)?.unit ?? "";
+    return products.find((p) => p.id === productId)?.unitOfMeasure ?? "";
   };
 
   return (
@@ -244,7 +264,7 @@ export default function ProductionPage() {
       {/* Items list */}
       {selectedStation && !isLoadingProducts && (
         <>
-          <div className="space-y-3 mb-4">
+          <div ref={dropdownContainerRef} className="space-y-3 mb-4">
             {items.map((item, index) => {
               const productName = item.productId
                 ? getProductName(item.productId)
@@ -332,7 +352,7 @@ export default function ProductionPage() {
                               {product.name}
                             </p>
                             <p className="text-xs text-gray-400 dark:text-slate-500">
-                              {product.code} · {product.unit} · {product.category}
+                              {product.code} · {product.unitOfMeasure} · {product.category.name}
                             </p>
                           </button>
                         ))}

@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UnitOfMeasure } from '@prisma/client';
+import { UnitOfMeasure, DeliveryDay } from '@prisma/client';
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
@@ -105,4 +105,31 @@ export class CreateProductDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @ApiPropertyOptional({
+    example: 2500.5,
+    description: 'Costo unitario del producto en moneda local',
+  })
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Type(() => Number)
+  unitCost?: number;
+
+  @ApiPropertyOptional({
+    example: 'Distribuidora Central',
+    description: 'Nombre del proveedor principal',
+  })
+  @IsOptional()
+  @IsString()
+  supplier?: string;
+
+  @ApiPropertyOptional({
+    enum: DeliveryDay,
+    example: DeliveryDay.MARTES,
+    description: 'Dia de entrega del proveedor',
+  })
+  @IsOptional()
+  @IsEnum(DeliveryDay)
+  deliveryDay?: DeliveryDay;
 }

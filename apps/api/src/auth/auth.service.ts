@@ -2,11 +2,19 @@ import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
+
+const ROLE_MAP: Record<Role, string> = {
+  [Role.ADMIN]: 'admin',
+  [Role.HEAD_CHEF]: 'supervisor',
+  [Role.SOUS_CHEF]: 'operator',
+};
 
 @Injectable()
 export class AuthService {
@@ -14,6 +22,10 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
+
+  private mapRole(role: Role): string {
+    return ROLE_MAP[role] ?? role;
+  }
 
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
@@ -40,13 +52,36 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role,
+        role: this.mapRole(user.role),
         organizationId: user.organizationId,
         stations: user.stations.map((s) => ({
           id: s.station.id,
           name: s.station.name,
         })),
       },
+    };
+  }
+
+  async getMe(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { stations: { include: { station: true } } },
+    });
+
+    if (!user || !user.isActive) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: this.mapRole(user.role),
+      organizationId: user.organizationId,
+      stations: user.stations.map((s) => ({
+        id: s.station.id,
+        name: s.station.name,
+      })),
     };
   }
 

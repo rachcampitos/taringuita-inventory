@@ -13,32 +13,42 @@ import { api, ApiError } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
-interface StationStatus {
-  id: string;
-  name: string;
-  reported: boolean;
-  reportedAt?: string;
-  operator?: string;
+interface InventoryStation {
+  stationId: string;
+  stationName: string;
+  totalProducts: number;
+  countedProducts: number;
+  isComplete: boolean;
+  lastCountAt?: string;
+  reportedBy?: { id: string; name: string };
 }
 
-interface LowStockItem {
-  id: string;
-  code: string;
-  name: string;
-  category: string;
-  currentStock: number;
+interface LowStockAlert {
+  productId: string;
+  productName: string;
+  productCode: string;
+  stationId: string;
+  stationName: string;
+  currentQuantity: number;
   minStock: number;
-  unit: string;
 }
 
-interface DashboardData {
-  stationsReportedToday: number;
-  totalStations: number;
-  productsCountedToday: number;
-  lowStockAlerts: number;
-  stations: StationStatus[];
-  lowStockItems: LowStockItem[];
-  lastUpdated: string;
+interface ProductionStation {
+  stationId: string;
+  stationName: string;
+  totalItemsProduced: number;
+}
+
+interface DashboardResponse {
+  date: string;
+  todayStatus: {
+    totalStations: number;
+    reportedStations: number;
+    pendingStations: number;
+  };
+  inventorySummary: InventoryStation[];
+  productionSummary: ProductionStation[];
+  lowStockAlerts: LowStockAlert[];
 }
 
 function StatCard({
@@ -57,10 +67,7 @@ function StatCard({
   cardClass?: string;
 }) {
   return (
-    <Card
-      className={cardClass}
-      padding="md"
-    >
+    <Card className={cardClass} padding="md">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-gray-500 dark:text-slate-400">{label}</p>
@@ -68,7 +75,9 @@ function StatCard({
             {value}
           </p>
           {sublabel && (
-            <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">{sublabel}</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
+              {sublabel}
+            </p>
           )}
         </div>
         <div className={`p-2.5 rounded-xl ${iconClass}`}>
@@ -94,7 +103,7 @@ function SkeletonCard() {
 }
 
 export default function DashboardPage() {
-  const [data, setData] = useState<DashboardData | null>(null);
+  const [data, setData] = useState<DashboardResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -102,10 +111,8 @@ export default function DashboardPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const { data: dashboardData } = await api.get<DashboardData>(
-        "/reports/dashboard"
-      );
-      setData(dashboardData);
+      const res = await api.get<DashboardResponse>("/reports/dashboard");
+      setData(res.data);
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -119,18 +126,16 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchData();
-    // Auto-refresh every 5 minutes
     const interval = setInterval(fetchData, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = (dateStr?: string) => {
-    if (!dateStr) return null;
-    return new Date(dateStr).toLocaleTimeString("es-PE", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  const totalCounted = data?.inventorySummary.reduce(
+    (sum, s) => sum + s.countedProducts,
+    0
+  ) ?? 0;
+
+  const alertCount = data?.lowStockAlerts.length ?? 0;
 
   return (
     <div className="px-4 py-6 md:px-6 md:py-8 max-w-5xl mx-auto">
@@ -141,7 +146,7 @@ export default function DashboardPage() {
             Dashboard
           </h1>
           <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
-            Resumen del dia
+            Resumen del dia &mdash; {data?.date ?? ""}
           </p>
         </div>
         <Button
@@ -170,7 +175,7 @@ export default function DashboardPage() {
               label="Estaciones reportadas"
               value={
                 data
-                  ? `${data.stationsReportedToday}/${data.totalStations}`
+                  ? `${data.todayStatus.reportedStations}/${data.todayStatus.totalStations}`
                   : "—"
               }
               sublabel="hoy"
@@ -179,23 +184,23 @@ export default function DashboardPage() {
             />
             <StatCard
               label="Productos contados"
-              value={data?.productsCountedToday ?? "—"}
+              value={totalCounted}
               sublabel="registros hoy"
               icon={Package}
               iconClass="bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400"
             />
             <StatCard
               label="Alertas de stock"
-              value={data?.lowStockAlerts ?? "—"}
+              value={alertCount}
               sublabel="bajo minimo"
               icon={AlertTriangle}
               iconClass={
-                (data?.lowStockAlerts ?? 0) > 0
+                alertCount > 0
                   ? "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400"
                   : "bg-gray-100 text-gray-400 dark:bg-slate-700 dark:text-slate-500"
               }
               cardClass={
-                (data?.lowStockAlerts ?? 0) > 0
+                alertCount > 0
                   ? "border-amber-200 dark:border-amber-800"
                   : ""
               }
@@ -236,50 +241,66 @@ export default function DashboardPage() {
                   </div>
                 </div>
               ))
-            ) : data?.stations.length ? (
-              data.stations.map((station) => (
-                <div
-                  key={station.id}
-                  className="px-5 py-3.5 flex items-center gap-3"
-                >
-                  {station.reported ? (
-                    <CheckCircle2
-                      size={20}
-                      className="text-emerald-500 shrink-0"
-                    />
-                  ) : (
-                    <Clock
-                      size={20}
-                      className="text-gray-300 dark:text-slate-600 shrink-0"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">
-                      {station.name}
-                    </p>
-                    {station.reported && station.reportedAt ? (
-                      <p className="text-xs text-gray-400 dark:text-slate-500">
-                        Reportado a las {formatTime(station.reportedAt)}
-                        {station.operator ? ` por ${station.operator}` : ""}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-gray-400 dark:text-slate-500">
-                        Pendiente
-                      </p>
-                    )}
-                  </div>
-                  <span
-                    className={[
-                      "text-xs font-medium px-2 py-0.5 rounded-full shrink-0",
-                      station.reported
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                        : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-slate-400",
-                    ].join(" ")}
+            ) : data?.inventorySummary?.length ? (
+              data.inventorySummary.map((station) => {
+                const hasReported = station.countedProducts > 0;
+                return (
+                  <div
+                    key={station.stationId}
+                    className="px-5 py-3.5 flex items-center gap-3"
                   >
-                    {station.reported ? "Listo" : "Pendiente"}
-                  </span>
-                </div>
-              ))
+                    {hasReported ? (
+                      <CheckCircle2
+                        size={20}
+                        className={
+                          station.isComplete
+                            ? "text-emerald-500 shrink-0"
+                            : "text-amber-400 shrink-0"
+                        }
+                      />
+                    ) : (
+                      <Clock
+                        size={20}
+                        className="text-gray-300 dark:text-slate-600 shrink-0"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate capitalize">
+                        {station.stationName}
+                      </p>
+                      {hasReported ? (
+                        <p className="text-xs text-gray-400 dark:text-slate-500">
+                          {station.countedProducts}/{station.totalProducts}{" "}
+                          productos contados
+                          {station.reportedBy
+                            ? ` por ${station.reportedBy.name}`
+                            : ""}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-gray-400 dark:text-slate-500">
+                          0/{station.totalProducts} &mdash; Pendiente
+                        </p>
+                      )}
+                    </div>
+                    <span
+                      className={[
+                        "text-xs font-medium px-2 py-0.5 rounded-full shrink-0",
+                        station.isComplete
+                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                          : hasReported
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                            : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-slate-400",
+                      ].join(" ")}
+                    >
+                      {station.isComplete
+                        ? "Completo"
+                        : hasReported
+                          ? "Parcial"
+                          : "Pendiente"}
+                    </span>
+                  </div>
+                );
+              })
             ) : (
               <div className="px-5 py-8 text-center text-sm text-gray-400 dark:text-slate-500">
                 No hay estaciones configuradas.
@@ -309,29 +330,32 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-          ) : data?.lowStockItems.length ? (
+          ) : data?.lowStockAlerts?.length ? (
             <div className="divide-y divide-gray-100 dark:divide-slate-700">
-              {data.lowStockItems.map((item) => {
+              {data.lowStockAlerts.map((alert) => {
                 const pct = Math.round(
-                  (item.currentStock / item.minStock) * 100
+                  (alert.currentQuantity / alert.minStock) * 100
                 );
                 return (
-                  <div key={item.id} className="px-5 py-3.5">
+                  <div key={`${alert.productId}-${alert.stationId}`} className="px-5 py-3.5">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">
-                          {item.name}
+                          {alert.productName}
                         </p>
                         <p className="text-xs text-gray-400 dark:text-slate-500">
-                          {item.code} · {item.category}
+                          {alert.productCode} &middot;{" "}
+                          <span className="capitalize">
+                            {alert.stationName}
+                          </span>
                         </p>
                       </div>
                       <div className="text-right shrink-0">
                         <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-                          {item.currentStock} {item.unit}
+                          {alert.currentQuantity}
                         </p>
                         <p className="text-xs text-gray-400 dark:text-slate-500">
-                          min: {item.minStock}
+                          min: {alert.minStock}
                         </p>
                       </div>
                     </div>
@@ -347,7 +371,10 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="px-5 py-8 text-center">
-              <CheckCircle2 size={32} className="text-emerald-400 mx-auto mb-2" />
+              <CheckCircle2
+                size={32}
+                className="text-emerald-400 mx-auto mb-2"
+              />
               <p className="text-sm text-gray-400 dark:text-slate-500">
                 Todos los productos en niveles correctos.
               </p>
@@ -355,12 +382,6 @@ export default function DashboardPage() {
           )}
         </Card>
       </div>
-
-      {data?.lastUpdated && (
-        <p className="text-xs text-gray-400 dark:text-slate-500 mt-4 text-right">
-          Ultima actualizacion: {new Date(data.lastUpdated).toLocaleTimeString("es-PE")}
-        </p>
-      )}
     </div>
   );
 }

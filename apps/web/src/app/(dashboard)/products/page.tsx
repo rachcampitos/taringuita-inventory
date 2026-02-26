@@ -18,6 +18,26 @@ import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
+import { EditProductModal } from "@/components/products/EditProductModal";
+
+interface ProductRaw {
+  id: string;
+  code: string;
+  name: string;
+  categoryId: string;
+  category: { id: string; name: string };
+  unitOfMeasure: string;
+  unitOfOrder: string;
+  conversionFactor: number;
+  minStock: number | null;
+  maxStock: number | null;
+  wastagePercent: number;
+  unitCost: number | null;
+  supplier: string | null;
+  deliveryDay: string | null;
+  isActive: boolean;
+}
+
 interface Product {
   id: string;
   code: string;
@@ -27,14 +47,17 @@ interface Product {
   minStock: number;
   wastagePercent: number;
   isActive: boolean;
+  raw: ProductRaw;
 }
 
 interface PaginatedResponse {
   data: Product[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    lastPage: number;
+  };
 }
 
 const PAGE_SIZE = 20;
@@ -64,6 +87,8 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState<ProductRaw | null>(null);
+  const [categoryObjects, setCategoryObjects] = useState<{ id: string; name: string }[]>([]);
 
   const isAdmin = user?.role === "admin" || user?.role === "supervisor";
 
@@ -86,12 +111,24 @@ export default function ProductsPage() {
       if (debouncedSearch) params.set("search", debouncedSearch);
       if (selectedCategory) params.set("category", selectedCategory);
 
-      const { data: response } = await api.get<PaginatedResponse>(
+      const { data: response } = await api.get<{ data: ProductRaw[]; meta: { total: number; page: number; limit: number; lastPage: number } }>(
         `/products?${params.toString()}`
       );
-      setProducts(response.data);
-      setTotal(response.total);
-      setTotalPages(response.totalPages);
+      setProducts(
+        response.data.map((p) => ({
+          id: p.id,
+          code: p.code,
+          name: p.name,
+          category: p.category?.name ?? "",
+          unit: p.unitOfMeasure,
+          minStock: Number(p.minStock) || 0,
+          wastagePercent: Number(p.wastagePercent) || 0,
+          isActive: p.isActive,
+          raw: p,
+        }))
+      );
+      setTotal(response.meta.total);
+      setTotalPages(response.meta.lastPage);
     } catch (err) {
       if (err instanceof ApiError) showError(err.message);
       else showError("No se pudieron cargar los productos.");
@@ -109,6 +146,12 @@ export default function ProductsPage() {
     api
       .get<string[]>("/products/categories")
       .then(({ data }) => setCategories(data))
+      .catch(() => {});
+
+    // Also load category objects for the edit modal
+    api
+      .get<{ data: { id: string; name: string }[] }>("/categories")
+      .then(({ data }) => setCategoryObjects(data.data ?? data as any))
       .catch(() => {});
   }, []);
 
@@ -326,6 +369,7 @@ export default function ProductsPage() {
                         <button
                           type="button"
                           aria-label={`Editar ${product.name}`}
+                          onClick={() => setEditingProduct(product.raw)}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:text-emerald-400 dark:hover:bg-emerald-950 transition-colors"
                         >
                           <Edit2 size={15} />
@@ -370,6 +414,19 @@ export default function ProductsPage() {
           </div>
         )}
       </div>
+
+      {/* Edit Product Modal */}
+      {editingProduct && (
+        <EditProductModal
+          product={editingProduct}
+          categories={categoryObjects}
+          onClose={() => setEditingProduct(null)}
+          onSaved={() => {
+            setEditingProduct(null);
+            fetchProducts();
+          }}
+        />
+      )}
     </div>
   );
 }

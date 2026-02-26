@@ -13,6 +13,22 @@ enum Role {
   SOUS_CHEF
 }
 
+enum DeliveryDay {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+}
+
+enum OrderStatus {
+  DRAFT
+  CONFIRMED
+  SENT
+  RECEIVED
+  CANCELLED
+}
+
 enum UnitOfMeasure {
   KG
   LT
@@ -29,6 +45,11 @@ enum UnitOfMeasure {
   BOTELLAS
   SOBRES
   ROLLOS
+  FRASCOS
+  POTES
+  TARROS
+  MALLAS
+  SACOS
 }
 
 model Organization {
@@ -49,10 +70,14 @@ model Location {
   address        String?
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
+  isActive       Boolean      @default(true)
+  brands         String[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   stations Station[]
+  users    User[]
+  orders   OrderRequest[]
 
   @@map("locations")
 }
@@ -65,10 +90,11 @@ model Station {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  assignedUsers   UserStation[]
-  inventoryCounts InventoryCount[]
-  productionLogs  ProductionLog[]
-  stationProducts StationProduct[]
+  assignedUsers      UserStation[]
+  inventoryCounts    InventoryCount[]
+  productionLogs     ProductionLog[]
+  stationProducts    StationProduct[]
+  weeklyConsumptions WeeklyConsumption[]
 
   @@map("stations")
 }
@@ -91,6 +117,8 @@ model User {
   role           Role         @default(SOUS_CHEF)
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
+  locationId     String?
+  location       Location?    @relation(fields: [locationId], references: [id])
   isActive       Boolean      @default(true)
   refreshToken   String?
   createdAt      DateTime     @default(now())
@@ -99,6 +127,7 @@ model User {
   stations        UserStation[]
   inventoryCounts InventoryCount[]
   productionLogs  ProductionLog[]
+  generatedOrders OrderRequest[]
 
   @@map("users")
 }
@@ -132,11 +161,17 @@ model Product {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
+  unitCost          Decimal?           @db.Decimal(12, 2)
+  supplier          String?
+  deliveryDay       DeliveryDay?
   inventoryCounts   InventoryCount[]
   productionLogs    ProductionLog[]
   stationProducts   StationProduct[]
   recipeIngredients RecipeIngredient[]
   recipesAsOutput   Recipe[]           @relation("RecipeOutput")
+  priceHistory      ProductPriceHistory[]
+  weeklyConsumptions WeeklyConsumption[]
+  orderItems        OrderItem[]
 
   @@map("products")
 }
@@ -184,6 +219,7 @@ model ProductionLog {
   user             User     @relation(fields: [userId], references: [id])
   createdAt        DateTime @default(now())
 
+  @@unique([stationId, productId, date])
   @@index([stationId, date])
   @@index([date])
   @@map("production_logs")
@@ -213,4 +249,70 @@ model RecipeIngredient {
   quantity  Decimal @db.Decimal(10, 4)
 
   @@map("recipe_ingredients")
+}
+
+model ProductPriceHistory {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  unitCost      Decimal  @db.Decimal(12, 2)
+  effectiveFrom DateTime @default(now())
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  @@index([productId, effectiveFrom])
+  @@map("product_price_history")
+}
+
+model WeeklyConsumption {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  stationId   String
+  station     Station  @relation(fields: [stationId], references: [id])
+  weekStart   DateTime @db.Date
+  weekEnd     DateTime @db.Date
+  consumption Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+
+  @@unique([productId, stationId, weekStart])
+  @@index([stationId, weekStart])
+  @@map("weekly_consumptions")
+}
+
+model OrderRequest {
+  id            String      @id @default(cuid())
+  locationId    String
+  location      Location    @relation(fields: [locationId], references: [id])
+  requestDate   DateTime    @db.Date
+  deliveryDay   DeliveryDay
+  status        OrderStatus @default(DRAFT)
+  generatedById String
+  generatedBy   User        @relation(fields: [generatedById], references: [id])
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  items OrderItem[]
+
+  @@index([locationId, requestDate])
+  @@map("order_requests")
+}
+
+model OrderItem {
+  id                    String        @id @default(cuid())
+  orderId               String
+  order                 OrderRequest  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId             String
+  product               Product       @relation(fields: [productId], references: [id])
+  currentStock          Decimal       @db.Decimal(10, 2)
+  weeklyAvgConsumption  Decimal       @db.Decimal(10, 2)
+  suggestedQty          Decimal       @db.Decimal(10, 2)
+  confirmedQty          Decimal?      @db.Decimal(10, 2)
+  unitOfOrder           UnitOfMeasure @default(UN)
+  conversionFactor      Decimal       @db.Decimal(10, 4)
+  unitCost              Decimal?      @db.Decimal(12, 2)
+
+  @@index([orderId])
+  @@map("order_items")
 }

@@ -114,15 +114,32 @@ export class ProductsController {
     type: Number,
     description: 'Resultados por pagina (default 20, max 100)',
   })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    description: 'Filtrar por nombre de categoria',
+  })
   @ApiResponse({ status: 200, description: 'Lista paginada de productos' })
   findAll(
     @Query('categoryId') categoryId?: string,
+    @Query('category') category?: string,
     @Query('search') search?: string,
     @Query('isActive', new ParseBoolPipe({ optional: true })) isActive?: boolean,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.productsService.findAll({ categoryId, search, isActive, page, limit });
+    return this.productsService.findAll({ categoryId, category, search, isActive, page, limit });
+  }
+
+  // ------------------------------------------------------------------
+  // GET /products/categories
+  // ------------------------------------------------------------------
+
+  @Get('categories')
+  @ApiOperation({ summary: 'Listar nombres de categorias con productos activos' })
+  @ApiResponse({ status: 200, description: 'Array de nombres de categorias' })
+  getCategories() {
+    return this.productsService.getCategoryNames();
   }
 
   // ------------------------------------------------------------------
@@ -154,6 +171,40 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Producto no encontrado' })
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
+  }
+
+  // ------------------------------------------------------------------
+  // PATCH /products/:id/price
+  // ------------------------------------------------------------------
+
+  @Patch(':id/price')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Actualizar precio unitario + crear historial (ADMIN)' })
+  @ApiParam({ name: 'id', description: 'ID del producto' })
+  @ApiResponse({ status: 200, description: 'Precio actualizado y registrado en historial' })
+  @ApiResponse({ status: 404, description: 'Producto no encontrado' })
+  updatePrice(
+    @Param('id') id: string,
+    @Body() body: { unitCost: number; notes?: string },
+  ) {
+    return this.productsService.updatePrice(id, body.unitCost, body.notes);
+  }
+
+  // ------------------------------------------------------------------
+  // GET /products/:id/price-history
+  // ------------------------------------------------------------------
+
+  @Get(':id/price-history')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Historial de precios de un producto (ADMIN)' })
+  @ApiParam({ name: 'id', description: 'ID del producto' })
+  @ApiResponse({ status: 200, description: 'Lista de cambios de precio' })
+  @ApiResponse({ status: 404, description: 'Producto no encontrado' })
+  getPriceHistory(
+    @Param('id') id: string,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.productsService.getPriceHistory(id, limit);
   }
 
   // ------------------------------------------------------------------
