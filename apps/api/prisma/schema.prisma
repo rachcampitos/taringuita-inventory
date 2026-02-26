@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  HEAD_CHEF
+  SOUS_CHEF
+}
+
+enum UnitOfMeasure {
+  KG
+  LT
+  UN
+  GR
+  ML
+  PORCIONES
+  BANDEJAS
+  BOLSAS
+  CAJAS
+  BIDONES
+  LATAS
+  PAQUETES
+  BOTELLAS
+  SOBRES
+  ROLLOS
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  locations Location[]
+  users     User[]
+
+  @@map("organizations")
+}
+
+model Location {
+  id             String       @id @default(cuid())
+  name           String
+  address        String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  stations Station[]
+
+  @@map("locations")
+}
+
+model Station {
+  id         String   @id @default(cuid())
+  name       String
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  assignedUsers   UserStation[]
+  inventoryCounts InventoryCount[]
+  productionLogs  ProductionLog[]
+  stationProducts StationProduct[]
+
+  @@map("stations")
+}
+
+model UserStation {
+  userId    String
+  stationId String
+  user      User    @relation(fields: [userId], references: [id])
+  station   Station @relation(fields: [stationId], references: [id])
+
+  @@id([userId, stationId])
+  @@map("user_stations")
+}
+
+model User {
+  id             String       @id @default(cuid())
+  email          String       @unique
+  password       String
+  name           String
+  role           Role         @default(SOUS_CHEF)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  isActive       Boolean      @default(true)
+  refreshToken   String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  stations        UserStation[]
+  inventoryCounts InventoryCount[]
+  productionLogs  ProductionLog[]
+
+  @@map("users")
+}
+
+model ProductCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+
+  @@map("product_categories")
+}
+
+model Product {
+  id               String        @id @default(cuid())
+  code             String        @unique
+  name             String
+  categoryId       String
+  category         ProductCategory @relation(fields: [categoryId], references: [id])
+  unitOfMeasure    UnitOfMeasure @default(UN)
+  unitOfOrder      UnitOfMeasure @default(UN)
+  conversionFactor Decimal       @default(1) @db.Decimal(10, 4)
+  minStock         Decimal?      @db.Decimal(10, 2)
+  maxStock         Decimal?      @db.Decimal(10, 2)
+  wastagePercent   Decimal       @default(0) @db.Decimal(5, 2)
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  inventoryCounts   InventoryCount[]
+  productionLogs    ProductionLog[]
+  stationProducts   StationProduct[]
+  recipeIngredients RecipeIngredient[]
+  recipesAsOutput   Recipe[]           @relation("RecipeOutput")
+
+  @@map("products")
+}
+
+model StationProduct {
+  stationId String
+  productId String
+  station   Station @relation(fields: [stationId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  sortOrder Int     @default(0)
+
+  @@id([stationId, productId])
+  @@map("station_products")
+}
+
+model InventoryCount {
+  id        String   @id @default(cuid())
+  stationId String
+  station   Station  @relation(fields: [stationId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Decimal  @db.Decimal(10, 2)
+  date      DateTime @db.Date
+  notes     String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([stationId, productId, date])
+  @@index([stationId, date])
+  @@index([date])
+  @@map("inventory_counts")
+}
+
+model ProductionLog {
+  id               String   @id @default(cuid())
+  stationId        String
+  station          Station  @relation(fields: [stationId], references: [id])
+  productId        String
+  product          Product  @relation(fields: [productId], references: [id])
+  quantityProduced Decimal  @db.Decimal(10, 2)
+  date             DateTime @db.Date
+  notes            String?
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  createdAt        DateTime @default(now())
+
+  @@index([stationId, date])
+  @@index([date])
+  @@map("production_logs")
+}
+
+model Recipe {
+  id              String   @id @default(cuid())
+  name            String
+  outputProductId String
+  outputProduct   Product  @relation("RecipeOutput", fields: [outputProductId], references: [id])
+  outputQuantity  Decimal  @db.Decimal(10, 2)
+  instructions    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  ingredients RecipeIngredient[]
+
+  @@map("recipes")
+}
+
+model RecipeIngredient {
+  id        String  @id @default(cuid())
+  recipeId  String
+  recipe    Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Decimal @db.Decimal(10, 4)
+
+  @@map("recipe_ingredients")
+}
