@@ -13,6 +13,7 @@ import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
 import { useOnlineStatus } from "@/lib/use-online-status";
+import { queueCount, getQueue, clearQueue, getQueueCount } from "@/lib/offline-queue";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -65,6 +66,7 @@ export default function InventoryPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [pendingSync, setPendingSync] = useState(0);
 
   const searchRef = useRef<HTMLInputElement>(null);
   const initialCountsRef = useRef<string>("");
@@ -75,6 +77,48 @@ export default function InventoryPage() {
   }, [counts]);
 
   useUnsavedChanges(hasUnsavedChanges);
+
+  // Check pending offline queue on mount
+  useEffect(() => {
+    getQueueCount().then(setPendingSync).catch(() => {});
+  }, []);
+
+  // Sync offline queue when coming back online
+  useEffect(() => {
+    if (!isOnline) return;
+
+    let cancelled = false;
+
+    async function syncQueue() {
+      const queued = await getQueue();
+      if (queued.length === 0 || cancelled) return;
+
+      let synced = 0;
+      for (const entry of queued) {
+        try {
+          await api.post("/inventory/count/bulk", {
+            stationId: entry.stationId,
+            date: entry.date,
+            items: entry.items,
+          });
+          synced++;
+        } catch {
+          // If one fails, stop and leave remaining in queue
+          break;
+        }
+      }
+
+      if (synced > 0 && !cancelled) {
+        await clearQueue();
+        setPendingSync(0);
+        success(`Se sincronizaron ${synced} conteo(s) pendiente(s).`, 5000);
+      }
+    }
+
+    syncQueue().catch(() => {});
+
+    return () => { cancelled = true; };
+  }, [isOnline]);
 
   // Load stations
   useEffect(() => {
@@ -197,7 +241,16 @@ export default function InventoryPage() {
     const today = new Date().toISOString().slice(0, 10);
 
     if (!isOnline) {
-      info("Sin conexion. El conteo se guardara en cola y se sincronizara cuando vuelvas a tener internet.", 5000);
+      try {
+        await queueCount(selectedStation, today, items);
+        const count = await getQueueCount();
+        setPendingSync(count);
+        setSavedSuccessfully(true);
+        initialCountsRef.current = JSON.stringify(counts);
+        info(`Conteo guardado offline (${count} pendiente${count > 1 ? "s" : ""}). Se sincronizara automaticamente.`, 5000);
+      } catch {
+        showError("No se pudo guardar el conteo offline.");
+      }
       return;
     }
 
@@ -233,12 +286,20 @@ export default function InventoryPage() {
           <h1 className="text-lg font-bold text-gray-900 dark:text-slate-100">
             Conteo de inventario
           </h1>
-          {savedSuccessfully && (
-            <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-              <CheckCircle2 size={14} />
-              Guardado
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            {pendingSync > 0 && (
+              <span className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
+                <AlertTriangle size={14} />
+                {pendingSync} pendiente{pendingSync > 1 ? "s" : ""}
+              </span>
+            )}
+            {savedSuccessfully && (
+              <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                <CheckCircle2 size={14} />
+                Guardado
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Station selector */}

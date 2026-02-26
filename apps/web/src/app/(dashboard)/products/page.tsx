@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 import { EditProductModal } from "@/components/products/EditProductModal";
+import { CreateProductModal } from "@/components/products/CreateProductModal";
 
 interface ProductRaw {
   id: string;
@@ -88,6 +89,7 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<ProductRaw | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [categoryObjects, setCategoryObjects] = useState<{ id: string; name: string }[]>([]);
 
   const isAdmin = user?.role === "admin" || user?.role === "supervisor";
@@ -179,7 +181,7 @@ export default function ProductsPage() {
           </p>
         </div>
         {isAdmin && (
-          <Button variant="primary" size="md">
+          <Button variant="primary" size="md" onClick={() => setShowCreateModal(true)}>
             <Plus size={16} />
             Nuevo producto
           </Button>
@@ -423,6 +425,18 @@ export default function ProductsPage() {
           onClose={() => setEditingProduct(null)}
           onSaved={() => {
             setEditingProduct(null);
+            fetchProducts();
+          }}
+        />
+      )}
+
+      {/* Create Product Modal */}
+      {showCreateModal && (
+        <CreateProductModal
+          categories={categoryObjects}
+          onClose={() => setShowCreateModal(false)}
+          onCreated={() => {
+            setShowCreateModal(false);
             fetchProducts();
           }}
         />
