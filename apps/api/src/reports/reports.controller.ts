@@ -72,10 +72,14 @@ export class ReportsController {
       },
     },
   })
+  @ApiQuery({ name: 'locationId', required: false, description: 'Filtrar por local' })
   @ApiResponse({ status: 401, description: 'No autenticado' })
   @ApiResponse({ status: 403, description: 'Solo administradores' })
-  getDashboard(@CurrentUser('sub') userId: string) {
-    return this.reportsService.getDashboard(userId);
+  getDashboard(
+    @CurrentUser('sub') userId: string,
+    @Query('locationId') locationId?: string,
+  ) {
+    return this.reportsService.getDashboard(userId, locationId);
   }
 
   // --------------------------------------------------------------------------

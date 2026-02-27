@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -7,6 +8,7 @@ import { AddIngredientDto, UpdateIngredientDto } from './dto/add-ingredient.dto'
 const RECIPE_SELECT = {
   id: true,
   name: true,
+  type: true,
   outputProductId: true,
   outputProduct: {
     select: { id: true, code: true, name: true, unitOfMeasure: true },
@@ -21,6 +23,7 @@ const RECIPE_SELECT = {
 const RECIPE_DETAIL_SELECT = {
   id: true,
   name: true,
+  type: true,
   outputProductId: true,
   outputProduct: {
     select: { id: true, code: true, name: true, unitOfMeasure: true },
@@ -56,6 +59,7 @@ export class RecipesService {
     return this.prisma.recipe.create({
       data: {
         name: dto.name,
+        type: dto.type ?? 'PREPARACION',
         outputProductId: dto.outputProductId,
         outputQuantity: dto.outputQuantity,
         instructions: dto.instructions ?? null,
@@ -74,23 +78,27 @@ export class RecipesService {
     });
   }
 
-  async findAll(query: { page?: number; limit?: number; search?: string }) {
-    const { page = 1, limit = 20, search } = query;
+  async findAll(query: { page?: number; limit?: number; search?: string; type?: string }) {
+    const { page = 1, limit = 20, search, type } = query;
     const take = Math.min(limit, 100);
     const skip = (page - 1) * take;
 
-    const where = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' as const } },
-            {
-              outputProduct: {
-                name: { contains: search, mode: 'insensitive' as const },
-              },
-            },
-          ],
-        }
-      : {};
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' as const } },
+        {
+          outputProduct: {
+            name: { contains: search, mode: 'insensitive' as const },
+          },
+        },
+      ];
+    }
+
+    if (type) {
+      where.type = type;
+    }
 
     const [total, data] = await this.prisma.$transaction([
       this.prisma.recipe.count({ where }),
@@ -134,6 +142,7 @@ export class RecipesService {
       where: { id },
       data: {
         ...(dto.name !== undefined ? { name: dto.name } : {}),
+        ...(dto.type !== undefined ? { type: dto.type } : {}),
         ...(dto.instructions !== undefined ? { instructions: dto.instructions } : {}),
         ...(dto.outputQuantity !== undefined ? { outputQuantity: dto.outputQuantity } : {}),
       },
@@ -153,27 +162,34 @@ export class RecipesService {
   async addIngredient(recipeId: string, dto: AddIngredientDto) {
     await this.ensureExists(recipeId);
 
-    return this.prisma.recipeIngredient.create({
-      data: {
-        recipeId,
-        productId: dto.productId,
-        quantity: dto.quantity,
-      },
-      select: {
-        id: true,
-        productId: true,
-        product: {
-          select: {
-            id: true,
-            code: true,
-            name: true,
-            unitOfMeasure: true,
-            unitCost: true,
-          },
+    try {
+      return await this.prisma.recipeIngredient.create({
+        data: {
+          recipeId,
+          productId: dto.productId,
+          quantity: dto.quantity,
         },
-        quantity: true,
-      },
-    });
+        select: {
+          id: true,
+          productId: true,
+          product: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+              unitOfMeasure: true,
+              unitCost: true,
+            },
+          },
+          quantity: true,
+        },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new ConflictException('Este ingrediente ya existe en la receta');
+      }
+      throw err;
+    }
   }
 
   async updateIngredient(recipeId: string, ingredientId: string, dto: UpdateIngredientDto) {
@@ -275,6 +291,17 @@ export class RecipesService {
       ? totalCost / Number(recipe.outputQuantity)
       : 0;
 
+    // Persist cost snapshot fire-and-forget
+    this.prisma.recipeCostSnapshot.create({
+      data: {
+        recipeId: recipe.id,
+        totalCost,
+        costPerUnit,
+        ingredientCount: breakdown.length,
+        snapshot: breakdown,
+      },
+    }).catch(() => {});
+
     return {
       recipeId: recipe.id,
       recipeName: recipe.name,
@@ -283,6 +310,23 @@ export class RecipesService {
       costPerUnit,
       breakdown,
     };
+  }
+
+  async getCostHistory(id: string, limit = 10) {
+    await this.ensureExists(id);
+
+    return this.prisma.recipeCostSnapshot.findMany({
+      where: { recipeId: id },
+      orderBy: { calculatedAt: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        totalCost: true,
+        costPerUnit: true,
+        ingredientCount: true,
+        calculatedAt: true,
+      },
+    });
   }
 
   private async ensureExists(id: string) {

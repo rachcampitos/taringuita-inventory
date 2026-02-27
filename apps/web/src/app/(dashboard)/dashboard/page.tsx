@@ -118,16 +118,26 @@ function SkeletonCard() {
   );
 }
 
+interface LocationOption {
+  id: string;
+  name: string;
+}
+
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [locations, setLocations] = useState<LocationOption[]>([]);
+  const [selectedLocationId, setSelectedLocationId] = useState("");
 
-  const fetchData = async () => {
+  const fetchData = async (locationId?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await api.get<DashboardResponse>("/reports/dashboard");
+      const params = new URLSearchParams();
+      if (locationId) params.set("locationId", locationId);
+      const url = params.toString() ? `/reports/dashboard?${params}` : "/reports/dashboard";
+      const res = await api.get<DashboardResponse>(url);
       setData(res.data);
     } catch (err) {
       if (err instanceof ApiError) {
@@ -141,10 +151,17 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    // Load locations
+    api.get<{ data: LocationOption[] }>("/locations?limit=100")
+      .then(({ data: res }) => setLocations(res.data))
+      .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    fetchData(selectedLocationId || undefined);
+    const interval = setInterval(() => fetchData(selectedLocationId || undefined), 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [selectedLocationId]);
 
   const totalCounted = data?.inventorySummary.reduce(
     (sum, s) => sum + s.countedProducts,
@@ -156,7 +173,7 @@ export default function DashboardPage() {
   return (
     <div className="px-4 py-6 md:px-6 md:py-8 max-w-5xl mx-auto">
       {/* Page header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
             Dashboard
@@ -165,16 +182,30 @@ export default function DashboardPage() {
             Resumen del dia &mdash; {data?.date ?? ""}
           </p>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={fetchData}
-          loading={isLoading && !!data}
-          disabled={isLoading && !data}
-        >
-          <RefreshCw size={14} />
-          Actualizar
-        </Button>
+        <div className="flex items-center gap-2">
+          {locations.length > 1 && (
+            <select
+              value={selectedLocationId}
+              onChange={(e) => setSelectedLocationId(e.target.value)}
+              className="rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="">Todos los locales</option>
+              {locations.map((loc) => (
+                <option key={loc.id} value={loc.id}>{loc.name}</option>
+              ))}
+            </select>
+          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => fetchData(selectedLocationId || undefined)}
+            loading={isLoading && !!data}
+            disabled={isLoading && !data}
+          >
+            <RefreshCw size={14} />
+            Actualizar
+          </Button>
+        </div>
       </div>
 
       {/* Stat cards */}

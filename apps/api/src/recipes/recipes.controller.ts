@@ -53,13 +53,15 @@ export class RecipesController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'type', required: false, description: 'Filtrar por tipo de receta' })
   @ApiResponse({ status: 200, description: 'Lista paginada de recetas' })
   findAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('search') search?: string,
+    @Query('type') type?: string,
   ) {
-    return this.recipesService.findAll({ page, limit, search });
+    return this.recipesService.findAll({ page, limit, search, type });
   }
 
   @Get(':id')
@@ -133,5 +135,19 @@ export class RecipesController {
   @ApiResponse({ status: 404, description: 'Receta no encontrada' })
   calculateCost(@Param('id') id: string) {
     return this.recipesService.calculateCost(id);
+  }
+
+  @Get(':id/cost-history')
+  @Roles(Role.ADMIN, Role.HEAD_CHEF)
+  @ApiOperation({ summary: 'Historial de costos de receta (ADMIN, HEAD_CHEF)' })
+  @ApiParam({ name: 'id', description: 'ID de la receta' })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'Historial de snapshots de costo' })
+  @ApiResponse({ status: 404, description: 'Receta no encontrada' })
+  getCostHistory(
+    @Param('id') id: string,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.recipesService.getCostHistory(id, limit);
   }
 }

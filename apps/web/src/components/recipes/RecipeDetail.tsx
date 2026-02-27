@@ -88,6 +88,15 @@ export function RecipeDetail({
   const [costData, setCostData] = useState<CostBreakdown | null>(null);
   const [loadingCost, setLoadingCost] = useState(false);
 
+  // Cost history
+  const [costHistory, setCostHistory] = useState<{
+    id: string;
+    totalCost: number;
+    costPerUnit: number;
+    ingredientCount: number;
+    calculatedAt: string;
+  }[]>([]);
+
   const totalCostEstimate = useMemo(() => {
     return recipe.ingredients.reduce((sum, ing) => {
       const cost = ing.product.unitCost ? Number(ing.product.unitCost) : 0;
@@ -163,6 +172,15 @@ export function RecipeDetail({
     try {
       const { data } = await api.get<CostBreakdown>(`/recipes/${recipe.id}/cost`);
       setCostData(data);
+      // Fetch cost history after calculation
+      const { data: history } = await api.get<{
+        id: string;
+        totalCost: number;
+        costPerUnit: number;
+        ingredientCount: number;
+        calculatedAt: string;
+      }[]>(`/recipes/${recipe.id}/cost-history?limit=8`);
+      setCostHistory(history);
     } catch (err) {
       if (err instanceof ApiError) showError(err.message);
       else showError("Error al calcular costo");
@@ -299,6 +317,39 @@ export function RecipeDetail({
                 ${costData.costPerUnit.toLocaleString("es-CL", { maximumFractionDigits: 0 })}
               </p>
             </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Cost history */}
+      {costHistory.length > 1 && (
+        <Card padding="md" className="mb-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-3">
+            Historial de costos
+          </h3>
+          <div className="space-y-1.5">
+            {costHistory.map((snap) => (
+              <div
+                key={snap.id}
+                className="flex items-center justify-between text-sm py-1.5 border-b border-gray-100 dark:border-slate-700 last:border-0"
+              >
+                <span className="text-gray-500 dark:text-slate-400 text-xs">
+                  {new Date(snap.calculatedAt).toLocaleDateString("es-CL", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                <span className="font-medium text-gray-900 dark:text-slate-100">
+                  ${Number(snap.totalCost).toLocaleString("es-CL")}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-slate-400">
+                  ${Number(snap.costPerUnit).toLocaleString("es-CL", { maximumFractionDigits: 0 })}/ud
+                </span>
+              </div>
+            ))}
           </div>
         </Card>
       )}

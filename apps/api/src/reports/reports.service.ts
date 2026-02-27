@@ -100,16 +100,20 @@ export class ReportsService {
   // Aggregated data for the admin panel. Scoped to the caller's organization.
   // --------------------------------------------------------------------------
 
-  async getDashboard(userId: string): Promise<DashboardData> {
+  async getDashboard(userId: string, locationId?: string): Promise<DashboardData> {
     const organizationId = await this.resolveOrganizationId(userId);
     const todayStr = todayUtc();
     const todayDate = parseDateOnly(todayStr);
+
+    const stationLocationWhere = locationId
+      ? { locationId }
+      : { location: { organizationId } };
 
     // ------------------------------------------------------------------
     // 1. Load all stations in the organization with their product counts
     // ------------------------------------------------------------------
     const stations = await this.prisma.station.findMany({
-      where: { location: { organizationId } },
+      where: stationLocationWhere,
       orderBy: { name: 'asc' },
       select: {
         id: true,
@@ -124,7 +128,7 @@ export class ReportsService {
     const todayCounts = await this.prisma.inventoryCount.findMany({
       where: {
         date: todayDate,
-        station: { location: { organizationId } },
+        station: stationLocationWhere,
       },
       select: { stationId: true, productId: true },
     });
@@ -144,7 +148,7 @@ export class ReportsService {
     const todayLogs = await this.prisma.productionLog.findMany({
       where: {
         date: todayDate,
-        station: { location: { organizationId } },
+        station: stationLocationWhere,
       },
       select: { stationId: true, quantityProduced: true },
     });
@@ -190,7 +194,7 @@ export class ReportsService {
     //    A product triggers an alert when its most recent count across
     //    any station falls below the product's minStock threshold.
     // ------------------------------------------------------------------
-    const lowStockAlerts = await this.buildLowStockAlerts(organizationId);
+    const lowStockAlerts = await this.buildLowStockAlerts(organizationId, locationId);
 
     // ------------------------------------------------------------------
     // 6. Cost summary (this week vs last week)
@@ -234,16 +238,19 @@ export class ReportsService {
     // ------------------------------------------------------------------
     const monthStart = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
 
+    const orderLocationWhere = locationId ? { locationId } : {};
+
     const [pendingOrders, lastOrder, totalOrdersThisMonth] = await Promise.all([
       this.prisma.orderRequest.count({
-        where: { status: { in: ['DRAFT', 'CONFIRMED', 'SENT'] } },
+        where: { status: { in: ['DRAFT', 'CONFIRMED', 'SENT'] }, ...orderLocationWhere },
       }),
       this.prisma.orderRequest.findFirst({
+        where: orderLocationWhere,
         orderBy: { createdAt: 'desc' },
         select: { createdAt: true },
       }),
       this.prisma.orderRequest.count({
-        where: { createdAt: { gte: monthStart } },
+        where: { createdAt: { gte: monthStart }, ...orderLocationWhere },
       }),
     ]);
 
@@ -507,6 +514,7 @@ export class ReportsService {
       select: {
         consumption: true,
         weekStart: true,
+        productId: true,
         product: {
           select: {
             unitCost: true,
@@ -531,7 +539,7 @@ export class ReportsService {
       }
       const cat = catMap.get(catName)!;
       cat.totalCost += lineCost;
-      cat.productIds.add(catName); // count unique
+      cat.productIds.add(c.productId);
     }
 
     const byCategory = [...catMap.entries()]
@@ -594,11 +602,15 @@ export class ReportsService {
    * descending, then keep only the first occurrence per (stationId, productId)
    * key in memory — equivalent to DISTINCT ON (stationId, productId).
    */
-  private async buildLowStockAlerts(organizationId: string): Promise<LowStockAlert[]> {
+  private async buildLowStockAlerts(organizationId: string, locationId?: string): Promise<LowStockAlert[]> {
+    const stationWhere = locationId
+      ? { locationId }
+      : { location: { organizationId } };
+
     // Pull all counts for the org sorted newest-first, with minStock
     const counts = await this.prisma.inventoryCount.findMany({
       where: {
-        station: { location: { organizationId } },
+        station: stationWhere,
         product: { minStock: { not: null } },
       },
       orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],

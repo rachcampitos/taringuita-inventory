@@ -3,12 +3,14 @@ import {
   IsNotEmpty,
   IsOptional,
   IsNumber,
+  IsEnum,
   IsArray,
   ValidateNested,
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { RecipeType } from '@prisma/client';
 
 class IngredientInput {
   @ApiProperty({ description: 'ID del producto ingrediente' })
@@ -37,6 +39,11 @@ export class CreateRecipeDto {
   @IsNumber()
   @Min(0.01)
   outputQuantity: number;
+
+  @ApiPropertyOptional({ description: 'Tipo de receta', enum: RecipeType })
+  @IsOptional()
+  @IsEnum(RecipeType)
+  type?: RecipeType;
 
   @ApiPropertyOptional({ description: 'Instrucciones de preparacion' })
   @IsOptional()

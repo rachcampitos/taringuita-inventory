@@ -29,6 +29,15 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum RecipeType {
+  PREPARACION
+  PRODUCCION
+  SEMIELABORADO
+  BASE
+  SALSA
+  POSTRE
+}
+
 enum UnitOfMeasure {
   KG
   LT
@@ -226,16 +235,18 @@ model ProductionLog {
 }
 
 model Recipe {
-  id              String   @id @default(cuid())
+  id              String     @id @default(cuid())
   name            String
+  type            RecipeType @default(PREPARACION)
   outputProductId String
-  outputProduct   Product  @relation("RecipeOutput", fields: [outputProductId], references: [id])
-  outputQuantity  Decimal  @db.Decimal(10, 2)
+  outputProduct   Product    @relation("RecipeOutput", fields: [outputProductId], references: [id])
+  outputQuantity  Decimal    @db.Decimal(10, 2)
   instructions    String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
-  ingredients RecipeIngredient[]
+  ingredients   RecipeIngredient[]
+  costSnapshots RecipeCostSnapshot[]
 
   @@map("recipes")
 }
@@ -248,7 +259,22 @@ model RecipeIngredient {
   product   Product @relation(fields: [productId], references: [id])
   quantity  Decimal @db.Decimal(10, 4)
 
+  @@unique([recipeId, productId])
   @@map("recipe_ingredients")
+}
+
+model RecipeCostSnapshot {
+  id              String   @id @default(cuid())
+  recipeId        String
+  recipe          Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  totalCost       Decimal  @db.Decimal(12, 2)
+  costPerUnit     Decimal  @db.Decimal(12, 2)
+  ingredientCount Int
+  snapshot        Json
+  calculatedAt    DateTime @default(now())
+
+  @@index([recipeId, calculatedAt])
+  @@map("recipe_cost_snapshots")
 }
 
 model ProductPriceHistory {

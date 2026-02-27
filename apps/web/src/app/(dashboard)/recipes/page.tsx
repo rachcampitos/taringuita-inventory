@@ -19,9 +19,30 @@ import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { RecipeDetail } from "@/components/recipes/RecipeDetail";
 
+type RecipeTypeKey = 'PREPARACION' | 'PRODUCCION' | 'SEMIELABORADO' | 'BASE' | 'SALSA' | 'POSTRE';
+
+const RECIPE_TYPE_LABELS: Record<RecipeTypeKey, string> = {
+  PREPARACION: 'Preparacion',
+  PRODUCCION: 'Produccion',
+  SEMIELABORADO: 'Semielaborado',
+  BASE: 'Base',
+  SALSA: 'Salsa',
+  POSTRE: 'Postre',
+};
+
+const RECIPE_TYPE_COLORS: Record<RecipeTypeKey, string> = {
+  PREPARACION: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
+  PRODUCCION: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+  SEMIELABORADO: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
+  BASE: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
+  SALSA: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300',
+  POSTRE: 'bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300',
+};
+
 interface RecipeSummary {
   id: string;
   name: string;
+  type: RecipeTypeKey;
   outputProduct: { id: string; code: string; name: string; unitOfMeasure: string };
   outputQuantity: number;
   _count: { ingredients: number };
@@ -56,6 +77,7 @@ export default function RecipesPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   // Products for selectors
@@ -67,6 +89,7 @@ export default function RecipesPage() {
   const [createOutputProductId, setCreateOutputProductId] = useState("");
   const [createOutputQty, setCreateOutputQty] = useState("1");
   const [createInstructions, setCreateInstructions] = useState("");
+  const [createType, setCreateType] = useState<RecipeTypeKey>("PREPARACION");
   const [creating, setCreating] = useState(false);
 
   // Detail view
@@ -81,6 +104,7 @@ export default function RecipesPage() {
         limit: String(PAGE_SIZE),
       });
       if (search.trim()) params.set("search", search.trim());
+      if (typeFilter) params.set("type", typeFilter);
 
       const { data: response } = await api.get<{
         data: RecipeSummary[];
@@ -95,7 +119,7 @@ export default function RecipesPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, search]);
+  }, [page, search, typeFilter]);
 
   useEffect(() => {
     fetchRecipes();
@@ -117,6 +141,7 @@ export default function RecipesPage() {
     try {
       const { data: recipe } = await api.post<RecipeFull>("/recipes", {
         name: createName,
+        type: createType,
         outputProductId: createOutputProductId,
         outputQuantity: parseFloat(createOutputQty),
         instructions: createInstructions || null,
@@ -126,6 +151,7 @@ export default function RecipesPage() {
       setCreateName("");
       setCreateInstructions("");
       setCreateOutputQty("1");
+      setCreateType("PREPARACION");
       setSelectedRecipe(recipe);
       fetchRecipes();
     } catch (err) {
@@ -209,22 +235,34 @@ export default function RecipesPage() {
         )}
       </div>
 
-      {/* Search */}
-      <div className="mb-4">
-        <Input
-          type="search"
-          placeholder="Buscar receta..."
-          value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          leftIcon={<Search size={16} />}
-          rightIcon={
-            search ? (
-              <button onClick={() => setSearch("")} aria-label="Limpiar">
-                <X size={14} />
-              </button>
-            ) : null
-          }
-        />
+      {/* Search + Filter */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="flex-1">
+          <Input
+            type="search"
+            placeholder="Buscar receta..."
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            leftIcon={<Search size={16} />}
+            rightIcon={
+              search ? (
+                <button onClick={() => setSearch("")} aria-label="Limpiar">
+                  <X size={14} />
+                </button>
+              ) : null
+            }
+          />
+        </div>
+        <select
+          value={typeFilter}
+          onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
+          className="rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 sm:w-48"
+        >
+          <option value="">Todos los tipos</option>
+          {(Object.keys(RECIPE_TYPE_LABELS) as RecipeTypeKey[]).map((key) => (
+            <option key={key} value={key}>{RECIPE_TYPE_LABELS[key]}</option>
+          ))}
+        </select>
       </div>
 
       {/* Results info */}
@@ -273,9 +311,14 @@ export default function RecipesPage() {
             <Card key={recipe.id} padding="md">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-900 dark:text-slate-100 text-sm">
-                    {recipe.name}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-gray-900 dark:text-slate-100 text-sm">
+                      {recipe.name}
+                    </h3>
+                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${RECIPE_TYPE_COLORS[recipe.type] || RECIPE_TYPE_COLORS.PREPARACION}`}>
+                      {RECIPE_TYPE_LABELS[recipe.type] || recipe.type}
+                    </span>
+                  </div>
                   <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                     Produce: {Number(recipe.outputQuantity)} {recipe.outputProduct.unitOfMeasure} de {recipe.outputProduct.name}
                     {" "} - {recipe._count.ingredients} ingredientes
@@ -327,6 +370,21 @@ export default function RecipesPage() {
                 placeholder="Ceviche clasico"
                 required
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+                Tipo de receta
+              </label>
+              <select
+                value={createType}
+                onChange={(e) => setCreateType(e.target.value as RecipeTypeKey)}
+                className="w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                {(Object.keys(RECIPE_TYPE_LABELS) as RecipeTypeKey[]).map((key) => (
+                  <option key={key} value={key}>{RECIPE_TYPE_LABELS[key]}</option>
+                ))}
+              </select>
             </div>
 
             <div>
