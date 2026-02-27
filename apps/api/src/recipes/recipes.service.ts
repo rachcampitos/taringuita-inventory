@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, RecipeType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -83,21 +83,21 @@ export class RecipesService {
     const take = Math.min(limit, 100);
     const skip = (page - 1) * take;
 
-    const where: any = {};
+    const where: Prisma.RecipeWhereInput = {};
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' as const } },
+        { name: { contains: search, mode: 'insensitive' } },
         {
           outputProduct: {
-            name: { contains: search, mode: 'insensitive' as const },
+            name: { contains: search, mode: 'insensitive' },
           },
         },
       ];
     }
 
     if (type) {
-      where.type = type;
+      where.type = type as RecipeType;
     }
 
     const [total, data] = await this.prisma.$transaction([
@@ -310,6 +310,47 @@ export class RecipesService {
       costPerUnit,
       breakdown,
     };
+  }
+
+  async duplicate(id: string) {
+    const original = await this.prisma.recipe.findUnique({
+      where: { id },
+      select: {
+        name: true,
+        type: true,
+        outputProductId: true,
+        outputQuantity: true,
+        instructions: true,
+        ingredients: {
+          select: { productId: true, quantity: true },
+        },
+      },
+    });
+
+    if (!original) {
+      throw new NotFoundException(`Receta con id "${id}" no encontrada`);
+    }
+
+    return this.prisma.recipe.create({
+      data: {
+        name: `${original.name} (copia)`,
+        type: original.type,
+        outputProductId: original.outputProductId,
+        outputQuantity: original.outputQuantity,
+        instructions: original.instructions,
+        ...(original.ingredients.length > 0
+          ? {
+              ingredients: {
+                create: original.ingredients.map((i) => ({
+                  productId: i.productId,
+                  quantity: i.quantity,
+                })),
+              },
+            }
+          : {}),
+      },
+      select: RECIPE_DETAIL_SELECT,
+    });
   }
 
   async getCostHistory(id: string, limit = 10) {

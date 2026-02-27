@@ -18,6 +18,10 @@ const mockPrisma = {
     update: jest.fn(),
     delete: jest.fn(),
   },
+  recipeCostSnapshot: {
+    create: jest.fn().mockResolvedValue({}),
+    findMany: jest.fn(),
+  },
   $transaction: jest.fn(),
 };
 

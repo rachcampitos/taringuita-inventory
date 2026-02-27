@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 // ---------------------------------------------------------------------------
@@ -9,8 +9,22 @@ function parseDateOnly(dateStr: string): Date {
   return new Date(`${dateStr}T00:00:00.000Z`);
 }
 
-function todayUtc(): string {
-  return new Date().toISOString().slice(0, 10);
+function todayLocal(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Santiago' });
+}
+
+const MAX_DATE_RANGE_DAYS = 90;
+
+function assertDateRange(from: string, to: string): void {
+  const fromDate = parseDateOnly(from);
+  const toDate = parseDateOnly(to);
+  const diffMs = toDate.getTime() - fromDate.getTime();
+  if (diffMs < 0) {
+    throw new BadRequestException('La fecha "from" debe ser anterior o igual a "to"');
+  }
+  if (diffMs > MAX_DATE_RANGE_DAYS * 86400000) {
+    throw new BadRequestException(`El rango maximo es ${MAX_DATE_RANGE_DAYS} dias`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -102,7 +116,7 @@ export class ReportsService {
 
   async getDashboard(userId: string, locationId?: string): Promise<DashboardData> {
     const organizationId = await this.resolveOrganizationId(userId);
-    const todayStr = todayUtc();
+    const todayStr = todayLocal();
     const todayDate = parseDateOnly(todayStr);
 
     const stationLocationWhere = locationId
@@ -292,6 +306,8 @@ export class ReportsService {
     from: string,
     to: string,
   ): Promise<{ stationId: string; stationName: string; from: string; to: string; rows: ConsumptionRow[] }> {
+    assertDateRange(from, to);
+
     const station = await this.prisma.station.findUnique({
       where: { id: stationId },
       select: { id: true, name: true },
@@ -428,6 +444,8 @@ export class ReportsService {
     from: string,
     to: string,
   ): Promise<{ productId: string; productName: string; productCode: string; from: string; to: string; trend: TrendRow[] }> {
+    assertDateRange(from, to);
+
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
       select: { id: true, code: true, name: true },
@@ -497,6 +515,8 @@ export class ReportsService {
     byCategory: { categoryName: string; totalCost: number; productCount: number }[];
     weeklyTrend: { weekStart: string; totalCost: number }[];
   }> {
+    assertDateRange(from, to);
+
     const fromDate = parseDateOnly(from);
     const toDate = parseDateOnly(to);
 
@@ -607,11 +627,15 @@ export class ReportsService {
       ? { locationId }
       : { location: { organizationId } };
 
-    // Pull all counts for the org sorted newest-first, with minStock
+    // Only look at counts from the last 7 days to avoid loading all history
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
     const counts = await this.prisma.inventoryCount.findMany({
       where: {
         station: stationWhere,
         product: { minStock: { not: null } },
+        date: { gte: sevenDaysAgo },
       },
       orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
       select: {

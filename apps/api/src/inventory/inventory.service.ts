@@ -18,10 +18,10 @@ function parseDateOnly(dateStr: string): Date {
 }
 
 // ---------------------------------------------------------------------------
-// Helper – return today as YYYY-MM-DD in UTC
+// Helper – return today as YYYY-MM-DD in Chile timezone (UTC-3/4)
 // ---------------------------------------------------------------------------
-function todayUtc(): string {
-  return new Date().toISOString().slice(0, 10);
+function todayLocal(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Santiago' });
 }
 
 @Injectable()
@@ -128,7 +128,7 @@ export class InventoryService {
   // --------------------------------------------------------------------------
 
   async getStationCounts(stationId: string, dateStr?: string) {
-    const targetDate = dateStr ?? todayUtc();
+    const targetDate = dateStr ?? todayLocal();
     const date = parseDateOnly(targetDate);
 
     // Verify station exists
@@ -286,7 +286,7 @@ export class InventoryService {
   // --------------------------------------------------------------------------
 
   async getDailyStatus(userId: string, dateStr?: string) {
-    const targetDate = dateStr ?? todayUtc();
+    const targetDate = dateStr ?? todayLocal();
     const date = parseDateOnly(targetDate);
     const organizationId = await this.resolveOrganizationId(userId);
 

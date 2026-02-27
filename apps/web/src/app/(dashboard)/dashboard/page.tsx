@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   CheckCircle2,
   Clock,
@@ -18,6 +18,7 @@ import Link from "next/link";
 import { api, ApiError } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 
 interface InventoryStation {
   stationId: string;
@@ -130,7 +131,7 @@ export default function DashboardPage() {
   const [locations, setLocations] = useState<LocationOption[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState("");
 
-  const fetchData = async (locationId?: string) => {
+  const fetchData = useCallback(async (locationId?: string) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -148,7 +149,11 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  const { refreshing } = usePullToRefresh({
+    onRefresh: () => fetchData(selectedLocationId || undefined),
+  });
 
   useEffect(() => {
     // Load locations
@@ -172,6 +177,14 @@ export default function DashboardPage() {
 
   return (
     <div className="px-4 py-6 md:px-6 md:py-8 max-w-5xl mx-auto">
+      {/* Pull-to-refresh indicator */}
+      {refreshing && (
+        <div className="flex items-center justify-center py-2 mb-2">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
+          <span className="ml-2 text-xs text-gray-500 dark:text-slate-400">Actualizando...</span>
+        </div>
+      )}
+
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>

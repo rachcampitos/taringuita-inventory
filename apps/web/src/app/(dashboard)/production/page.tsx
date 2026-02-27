@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { useOnlineStatus } from "@/lib/use-online-status";
 import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
+import { queueProduction, getProductionQueue, deleteProductionEntry, getProductionQueueCount } from "@/lib/offline-queue";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -53,7 +55,8 @@ function createEmptyItem(): ProductionItem {
 
 export default function ProductionPage() {
   const { user } = useAuth();
-  const { success, error: showError } = useToast();
+  const isOnline = useOnlineStatus();
+  const { success, error: showError, info } = useToast();
 
   const [stations, setStations] = useState<Station[]>([]);
   const [selectedStation, setSelectedStation] = useState<string>("");
@@ -64,7 +67,51 @@ export default function ProductionPage() {
   const [isLoadingStations, setIsLoadingStations] = useState(true);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [pendingSync, setPendingSync] = useState(0);
   const dropdownContainerRef = useRef<HTMLDivElement>(null);
+
+  // Check pending offline queue on mount
+  useEffect(() => {
+    getProductionQueueCount().then(setPendingSync).catch(() => {});
+  }, []);
+
+  // Sync production offline queue when coming back online
+  useEffect(() => {
+    if (!isOnline) return;
+    let cancelled = false;
+
+    async function syncQueue() {
+      const queued = await getProductionQueue();
+      if (queued.length === 0 || cancelled) return;
+
+      let synced = 0;
+      for (const entry of queued) {
+        if (cancelled) break;
+        try {
+          await api.post("/production/log/bulk", {
+            stationId: entry.stationId,
+            date: entry.date,
+            items: entry.items,
+          });
+          if (entry.id != null) {
+            await deleteProductionEntry(entry.id);
+          }
+          synced++;
+        } catch {
+          break;
+        }
+      }
+
+      if (synced > 0 && !cancelled) {
+        const remaining = await getProductionQueueCount();
+        setPendingSync(remaining);
+        success(`Se sincronizaron ${synced} registro(s) de produccion.`, 5000);
+      }
+    }
+
+    syncQueue().catch(() => {});
+    return () => { cancelled = true; };
+  }, [isOnline]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -177,16 +224,33 @@ export default function ProductionPage() {
       return;
     }
 
+    const today = new Date().toISOString().slice(0, 10);
+    const payload = validItems.map((item) => ({
+      productId: item.productId,
+      quantityProduced: item.quantity as number,
+      notes: item.notes.trim() || undefined,
+    }));
+
+    if (!isOnline) {
+      try {
+        await queueProduction(selectedStation, today, payload);
+        const count = await getProductionQueueCount();
+        setPendingSync(count);
+        info(`Produccion guardada offline (${count} pendiente${count > 1 ? "s" : ""}). Se sincronizara automaticamente.`, 5000);
+        setItems([createEmptyItem()]);
+        setProductSearch({});
+      } catch {
+        showError("No se pudo guardar la produccion offline.");
+      }
+      return;
+    }
+
     setIsSaving(true);
     try {
       await api.post("/production/log/bulk", {
         stationId: selectedStation,
-        date: new Date().toISOString().slice(0, 10),
-        items: validItems.map((item) => ({
-          productId: item.productId,
-          quantityProduced: item.quantity,
-          notes: item.notes.trim() || undefined,
-        })),
+        date: today,
+        items: payload,
       });
       success(`Produccion registrada: ${validItems.length} items.`, 5000);
       setItems([createEmptyItem()]);

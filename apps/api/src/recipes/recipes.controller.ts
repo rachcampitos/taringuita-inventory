@@ -64,6 +64,16 @@ export class RecipesController {
     return this.recipesService.findAll({ page, limit, search, type });
   }
 
+  @Post(':id/duplicate')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Duplicar receta con ingredientes (ADMIN)' })
+  @ApiParam({ name: 'id', description: 'ID de la receta a duplicar' })
+  @ApiResponse({ status: 201, description: 'Receta duplicada' })
+  @ApiResponse({ status: 404, description: 'Receta no encontrada' })
+  duplicate(@Param('id') id: string) {
+    return this.recipesService.duplicate(id);
+  }
+
   @Get(':id')
   @Roles(Role.ADMIN, Role.HEAD_CHEF)
   @ApiOperation({ summary: 'Detalle de receta con ingredientes (ADMIN, HEAD_CHEF)' })

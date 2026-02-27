@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useToast } from "@/components/ui/Toast";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Card } from "@/components/ui/Card";
 
 const UNIT_OPTIONS = [
   "KG", "LT", "UN", "GR", "ML", "PORCIONES", "BANDEJAS", "BOLSAS",
@@ -56,6 +58,13 @@ export function EditProductModal({
   const { success, error: showError } = useToast();
   const [saving, setSaving] = useState(false);
 
+  // Price history
+  const [priceHistoryOpen, setPriceHistoryOpen] = useState(false);
+  const [priceHistory, setPriceHistory] = useState<
+    { id: string; unitCost: number; notes: string | null; changedAt: string }[]
+  >([]);
+  const [loadingPriceHistory, setLoadingPriceHistory] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     code: "",
@@ -91,6 +100,29 @@ export function EditProductModal({
       });
     }
   }, [product]);
+
+  async function fetchPriceHistory() {
+    if (!product) return;
+    setLoadingPriceHistory(true);
+    try {
+      const { data } = await api.get<
+        { id: string; unitCost: number; notes: string | null; changedAt: string }[]
+      >(`/products/${product.id}/price-history?limit=10`);
+      setPriceHistory(data);
+    } catch {
+      // silently fail
+    } finally {
+      setLoadingPriceHistory(false);
+    }
+  }
+
+  function handleTogglePriceHistory() {
+    const next = !priceHistoryOpen;
+    setPriceHistoryOpen(next);
+    if (next && priceHistory.length === 0) {
+      fetchPriceHistory();
+    }
+  }
 
   if (!product) return null;
 
@@ -308,6 +340,54 @@ export function EditProductModal({
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Price history */}
+        <div>
+          <button
+            type="button"
+            onClick={handleTogglePriceHistory}
+            className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+          >
+            {priceHistoryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            Historial de precios
+          </button>
+          {priceHistoryOpen && (
+            <Card padding="sm" className="mt-2">
+              {loadingPriceHistory ? (
+                <div className="animate-pulse space-y-2 py-2">
+                  <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-3/4" />
+                  <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-1/2" />
+                </div>
+              ) : priceHistory.length === 0 ? (
+                <p className="text-xs text-gray-400 dark:text-slate-500 py-2">
+                  Sin historial de precios
+                </p>
+              ) : (
+                <div className="divide-y divide-gray-100 dark:divide-slate-700">
+                  {priceHistory.map((entry) => (
+                    <div key={entry.id} className="flex items-center justify-between py-1.5 text-xs">
+                      <span className="text-gray-500 dark:text-slate-400">
+                        {new Date(entry.changedAt).toLocaleDateString("es-CL", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-slate-100">
+                        ${Number(entry.unitCost).toLocaleString("es-CL")}
+                      </span>
+                      {entry.notes && (
+                        <span className="text-gray-400 dark:text-slate-500 truncate max-w-[120px]">
+                          {entry.notes}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+          )}
         </div>
 
         {/* Active toggle */}

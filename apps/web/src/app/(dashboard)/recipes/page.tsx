@@ -185,15 +185,22 @@ export default function RecipesPage() {
     }
   }
 
-  async function handleDeleteRecipe(id: string) {
+  function handleDeleteRecipe() {
+    setSelectedRecipe(null);
+    fetchRecipes();
+  }
+
+  async function handleNavigateToRecipe(id: string) {
+    setLoadingDetail(true);
     try {
-      await api.delete(`/recipes/${id}`);
-      success("Receta eliminada");
-      setSelectedRecipe(null);
+      const { data } = await api.get<RecipeFull>(`/recipes/${id}`);
+      setSelectedRecipe(data);
       fetchRecipes();
     } catch (err) {
       if (err instanceof ApiError) showError(err.message);
-      else showError("Error al eliminar receta");
+      else showError("Error al cargar receta");
+    } finally {
+      setLoadingDetail(false);
     }
   }
 
@@ -207,6 +214,7 @@ export default function RecipesPage() {
           onBack={() => { setSelectedRecipe(null); fetchRecipes(); }}
           onRefresh={refreshDetail}
           onDelete={handleDeleteRecipe}
+          onNavigate={handleNavigateToRecipe}
           isAdmin={isAdmin}
         />
       </div>
@@ -276,14 +284,28 @@ export default function RecipesPage() {
         </span>
       </div>
 
+      {/* Loading transition for detail */}
+      {loadingDetail && !selectedRecipe && (
+        <div className="flex items-center justify-center py-12">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
+          <span className="ml-3 text-sm text-gray-500 dark:text-slate-400">Cargando receta...</span>
+        </div>
+      )}
+
       {/* Recipes list */}
       {isLoading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 3 }).map((_, i) => (
+        <div className="space-y-2">
+          {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i} padding="md">
-              <div className="animate-pulse space-y-2">
-                <div className="h-5 bg-gray-200 dark:bg-slate-700 rounded w-1/3" />
-                <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-2/3" />
+              <div className="animate-pulse flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-36" />
+                    <div className="h-5 bg-gray-200 dark:bg-slate-700 rounded-full w-20" />
+                  </div>
+                  <div className="h-3 bg-gray-100 dark:bg-slate-700/50 rounded w-56 mt-2" />
+                </div>
+                <div className="h-8 bg-gray-200 dark:bg-slate-700 rounded w-14" />
               </div>
             </Card>
           ))}

@@ -13,7 +13,7 @@ import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
 import { useOnlineStatus } from "@/lib/use-online-status";
-import { queueCount, getQueue, clearQueue, getQueueCount } from "@/lib/offline-queue";
+import { queueCount, getQueue, deleteEntry, getQueueCount } from "@/lib/offline-queue";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -95,22 +95,25 @@ export default function InventoryPage() {
 
       let synced = 0;
       for (const entry of queued) {
+        if (cancelled) break;
         try {
           await api.post("/inventory/count/bulk", {
             stationId: entry.stationId,
             date: entry.date,
             items: entry.items,
           });
+          if (entry.id != null) {
+            await deleteEntry(entry.id);
+          }
           synced++;
         } catch {
-          // If one fails, stop and leave remaining in queue
           break;
         }
       }
 
       if (synced > 0 && !cancelled) {
-        await clearQueue();
-        setPendingSync(0);
+        const remaining = await getQueueCount();
+        setPendingSync(remaining);
         success(`Se sincronizaron ${synced} conteo(s) pendiente(s).`, 5000);
       }
     }
@@ -219,8 +222,9 @@ export default function InventoryPage() {
 
   const handleCountChange = (productId: string, value: string) => {
     const num = value === "" ? "" : Number(value);
-    if (num !== "" && (isNaN(num as number) || (num as number) < 0)) return;
+    if (num !== "" && (isNaN(num as number) || (num as number) < 0 || (num as number) > 9999)) return;
     setCounts((prev) => ({ ...prev, [productId]: num }));
+    setSavedSuccessfully(false);
   };
 
   const handleSave = async () => {
@@ -425,7 +429,7 @@ export default function InventoryPage() {
                           <div
                             key={product.id}
                             className={[
-                              "flex items-center gap-3 rounded-xl border px-4 py-3",
+                              "flex items-center gap-3 rounded-xl border px-4 py-3.5 min-h-[44px]",
                               "bg-white dark:bg-slate-800 transition-colors",
                               hasValue
                                 ? "border-emerald-300 dark:border-emerald-700"
@@ -459,6 +463,7 @@ export default function InventoryPage() {
                                 type="number"
                                 inputMode="decimal"
                                 min="0"
+                                max="9999"
                                 step="0.1"
                                 value={qty ?? ""}
                                 onChange={(e) =>
@@ -467,7 +472,7 @@ export default function InventoryPage() {
                                 placeholder="0"
                                 aria-label={`Cantidad de ${product.name}`}
                                 className={[
-                                  "w-20 rounded-lg border px-3 py-1.5 text-right text-sm font-medium",
+                                  "w-20 rounded-lg border px-3 py-2.5 text-right text-sm font-medium min-h-[44px]",
                                   "bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100",
                                   "focus:outline-none focus:ring-2 focus:ring-emerald-500",
                                   "placeholder:text-gray-300 dark:placeholder:text-slate-600",

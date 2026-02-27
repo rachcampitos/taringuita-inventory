@@ -9,11 +9,13 @@ import {
   DollarSign,
   Save,
   X,
+  Copy,
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { RecipeIngredientRow, type IngredientData } from "./RecipeIngredientRow";
 
 interface RecipeData {
@@ -58,6 +60,7 @@ interface RecipeDetailProps {
   onBack: () => void;
   onRefresh: () => void;
   onDelete: (id: string) => void;
+  onNavigate?: (id: string) => void;
   isAdmin: boolean;
 }
 
@@ -67,6 +70,7 @@ export function RecipeDetail({
   onBack,
   onRefresh,
   onDelete,
+  onNavigate,
   isAdmin,
 }: RecipeDetailProps) {
   const { success, error: showError } = useToast();
@@ -87,6 +91,15 @@ export function RecipeDetail({
   // Cost
   const [costData, setCostData] = useState<CostBreakdown | null>(null);
   const [loadingCost, setLoadingCost] = useState(false);
+
+  // Duplicate
+  const [duplicating, setDuplicating] = useState(false);
+
+  // Confirm dialogs
+  const [confirmDeleteRecipe, setConfirmDeleteRecipe] = useState(false);
+  const [confirmDeleteIngredient, setConfirmDeleteIngredient] = useState<string | null>(null);
+  const [deletingRecipe, setDeletingRecipe] = useState(false);
+  const [deletingIngredient, setDeletingIngredient] = useState(false);
 
   // Cost history
   const [costHistory, setCostHistory] = useState<{
@@ -136,13 +149,46 @@ export function RecipeDetail({
   }
 
   async function handleDeleteIngredient(ingredientId: string) {
+    setDeletingIngredient(true);
     try {
       await api.delete(`/recipes/${recipe.id}/ingredients/${ingredientId}`);
       success("Ingrediente eliminado");
+      setConfirmDeleteIngredient(null);
       onRefresh();
     } catch (err) {
       if (err instanceof ApiError) showError(err.message);
       else showError("Error al eliminar ingrediente");
+    } finally {
+      setDeletingIngredient(false);
+    }
+  }
+
+  async function handleDuplicate() {
+    setDuplicating(true);
+    try {
+      const { data: copy } = await api.post<RecipeData>(`/recipes/${recipe.id}/duplicate`);
+      success("Receta duplicada");
+      if (onNavigate) onNavigate(copy.id);
+    } catch (err) {
+      if (err instanceof ApiError) showError(err.message);
+      else showError("Error al duplicar receta");
+    } finally {
+      setDuplicating(false);
+    }
+  }
+
+  async function handleConfirmDeleteRecipe() {
+    setDeletingRecipe(true);
+    try {
+      await api.delete(`/recipes/${recipe.id}`);
+      success("Receta eliminada");
+      setConfirmDeleteRecipe(false);
+      onDelete(recipe.id);
+    } catch (err) {
+      if (err instanceof ApiError) showError(err.message);
+      else showError("Error al eliminar receta");
+    } finally {
+      setDeletingRecipe(false);
     }
   }
 
@@ -260,10 +306,13 @@ export function RecipeDetail({
           <Button variant="secondary" size="sm" onClick={handleLoadCost} loading={loadingCost}>
             <DollarSign size={14} /> Calcular costo
           </Button>
+          <Button variant="secondary" size="sm" onClick={handleDuplicate} loading={duplicating}>
+            <Copy size={14} /> Duplicar
+          </Button>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onDelete(recipe.id)}
+            onClick={() => setConfirmDeleteRecipe(true)}
           >
             <Trash2 size={14} /> Eliminar
           </Button>
@@ -434,7 +483,7 @@ export function RecipeDetail({
                     ingredient={ing}
                     editable={isAdmin}
                     onUpdateQty={handleUpdateIngredientQty}
-                    onDelete={handleDeleteIngredient}
+                    onDelete={(id) => setConfirmDeleteIngredient(id)}
                   />
                 ))}
               </tbody>
@@ -442,6 +491,32 @@ export function RecipeDetail({
           </div>
         </Card>
       )}
+
+      {/* Confirm delete recipe */}
+      <ConfirmDialog
+        isOpen={confirmDeleteRecipe}
+        title="Eliminar receta"
+        message={`Estas seguro de eliminar "${recipe.name}"? Esta accion no se puede deshacer.`}
+        confirmLabel="Eliminar"
+        variant="danger"
+        onConfirm={handleConfirmDeleteRecipe}
+        onCancel={() => setConfirmDeleteRecipe(false)}
+        loading={deletingRecipe}
+      />
+
+      {/* Confirm delete ingredient */}
+      <ConfirmDialog
+        isOpen={!!confirmDeleteIngredient}
+        title="Eliminar ingrediente"
+        message="Estas seguro de eliminar este ingrediente de la receta?"
+        confirmLabel="Eliminar"
+        variant="danger"
+        onConfirm={() => {
+          if (confirmDeleteIngredient) handleDeleteIngredient(confirmDeleteIngredient);
+        }}
+        onCancel={() => setConfirmDeleteIngredient(null)}
+        loading={deletingIngredient}
+      />
     </div>
   );
 }

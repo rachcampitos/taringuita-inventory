@@ -85,9 +85,18 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userId: string, refreshToken: string) {
+  async refreshTokens(refreshToken: string) {
+    let payload: { sub: string };
+    try {
+      payload = this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+    } catch {
+      throw new ForbiddenException('Acceso denegado');
+    }
+
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: payload.sub },
     });
 
     if (!user || !user.refreshToken) {
@@ -116,11 +125,11 @@ export class AuthService {
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        secret: process.env.JWT_SECRET || 'dev-secret-change-me',
+        secret: process.env.JWT_SECRET,
         expiresIn: '15m',
       }),
       this.jwtService.signAsync(payload, {
-        secret: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret',
+        secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '7d',
       }),
     ]);
