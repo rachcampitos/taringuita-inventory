@@ -156,9 +156,9 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    // Load locations
-    api.get<{ data: LocationOption[] }>("/locations?limit=100")
-      .then(({ data: res }) => setLocations(res.data))
+    // Load locations - endpoint returns flat array
+    api.get<LocationOption[]>("/locations?limit=100")
+      .then(({ data }) => setLocations(Array.isArray(data) ? data : []))
       .catch(() => {});
   }, []);
 
