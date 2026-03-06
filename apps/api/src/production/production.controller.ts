@@ -24,6 +24,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ProductionService } from './production.service';
 import { CreateProductionLogDto } from './dto/create-production-log.dto';
 import { BulkProductionLogDto } from './dto/bulk-production-log.dto';
+import { CreateTransformationDto } from './dto/create-transformation.dto';
 
 @ApiTags('Production')
 @ApiBearerAuth()
@@ -92,6 +93,71 @@ export class ProductionController {
     @Query('date') date?: string,
   ) {
     return this.productionService.getDailySummary(userId, date);
+  }
+
+  // --------------------------------------------------------------------------
+  // POST /production/transformation
+  // --------------------------------------------------------------------------
+
+  @Post('transformation')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Registrar una transformacion de produccion (materia prima bruta -> productos porcionados)' })
+  @ApiResponse({ status: 201, description: 'Transformacion registrada correctamente' })
+  @ApiResponse({ status: 400, description: 'Suma de salidas supera la entrada' })
+  @ApiResponse({ status: 403, description: 'Sin permiso para registrar transformaciones' })
+  createTransformation(
+    @Body() dto: CreateTransformationDto,
+    @CurrentUser('sub') userId: string,
+  ) {
+    return this.productionService.createTransformation(dto, userId);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /production/transformations?date=YYYY-MM-DD
+  // --------------------------------------------------------------------------
+
+  @Get('transformations')
+  @ApiOperation({ summary: 'Listar transformaciones del dia' })
+  @ApiQuery({
+    name: 'date',
+    required: false,
+    example: '2026-03-05',
+    description: 'Fecha a consultar (YYYY-MM-DD). Si se omite, usa hoy.',
+  })
+  @ApiResponse({ status: 200, description: 'Lista de transformaciones del dia' })
+  getTransformations(@Query('date') date?: string) {
+    return this.productionService.getTransformations(date);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /production/transformation/summary?date=YYYY-MM-DD
+  // Must be before /:id to avoid route shadowing
+  // --------------------------------------------------------------------------
+
+  @Get('transformation/summary')
+  @ApiOperation({ summary: 'Resumen de merma y rendimiento del dia' })
+  @ApiQuery({
+    name: 'date',
+    required: false,
+    example: '2026-03-05',
+    description: 'Fecha a consultar (YYYY-MM-DD). Si se omite, usa hoy.',
+  })
+  @ApiResponse({ status: 200, description: 'Resumen de transformaciones del dia' })
+  getTransformationSummary(@Query('date') date?: string) {
+    return this.productionService.getTransformationSummary(date);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /production/transformation/:id
+  // --------------------------------------------------------------------------
+
+  @Get('transformation/:id')
+  @ApiOperation({ summary: 'Detalle de una transformacion por ID' })
+  @ApiParam({ name: 'id', description: 'ID de la transformacion' })
+  @ApiResponse({ status: 200, description: 'Detalle de la transformacion' })
+  @ApiResponse({ status: 404, description: 'Transformacion no encontrada' })
+  getTransformationById(@Param('id') id: string) {
+    return this.productionService.getTransformationById(id);
   }
 
   // --------------------------------------------------------------------------

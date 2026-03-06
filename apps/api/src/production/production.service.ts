@@ -1,12 +1,14 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductionLogDto } from './dto/create-production-log.dto';
 import { BulkProductionLogDto } from './dto/bulk-production-log.dto';
+import { CreateTransformationDto } from './dto/create-transformation.dto';
 
 // ---------------------------------------------------------------------------
 // Helper – parse date string to a Date at midnight UTC.
@@ -289,6 +291,210 @@ export class ProductionService {
   }
 
   // --------------------------------------------------------------------------
+  // POST /production/transformation
+  // Register a production transformation (raw input -> portioned outputs)
+  // --------------------------------------------------------------------------
+
+  async createTransformation(dto: CreateTransformationDto, userId: string) {
+    await this.assertUserCanTransform(userId);
+
+    const outputSum = dto.outputs.reduce((sum, o) => sum + o.quantity, 0);
+
+    if (outputSum > dto.inputQuantity) {
+      throw new BadRequestException(
+        `La suma de salidas (${outputSum}) no puede superar la cantidad de entrada (${dto.inputQuantity})`,
+      );
+    }
+
+    const mermaQuantity = Number((dto.inputQuantity - outputSum).toFixed(2));
+    const mermaPercent = Number(((mermaQuantity / dto.inputQuantity) * 100).toFixed(2));
+    const date = parseDateOnly(dto.date);
+
+    const almacenamiento = await this.findAlmacenamientoStation();
+
+    const result = await this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const transformation = await tx.productionTransformation.create({
+        data: {
+          inputProductId: dto.inputProductId,
+          inputQuantity: dto.inputQuantity,
+          mermaQuantity,
+          mermaPercent,
+          date,
+          notes: dto.notes,
+          recipeId: dto.recipeId,
+          userId,
+          outputs: {
+            create: dto.outputs.map((o) => ({
+              outputProductId: o.outputProductId,
+              quantity: o.quantity,
+            })),
+          },
+        },
+        select: TRANSFORMATION_DETAIL_SELECT,
+      });
+
+      for (const output of dto.outputs) {
+        const existing = await tx.inventoryCount.findUnique({
+          where: {
+            stationId_productId_date: {
+              stationId: almacenamiento.id,
+              productId: output.outputProductId,
+              date,
+            },
+          },
+        });
+
+        if (existing) {
+          await tx.inventoryCount.update({
+            where: { id: existing.id },
+            data: {
+              quantity: { increment: output.quantity },
+              userId,
+            },
+          });
+        } else {
+          await tx.inventoryCount.create({
+            data: {
+              stationId: almacenamiento.id,
+              productId: output.outputProductId,
+              quantity: output.quantity,
+              date,
+              userId,
+            },
+          });
+        }
+      }
+
+      return transformation;
+    });
+
+    return this.serializeTransformation(result);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /production/transformations?date=YYYY-MM-DD
+  // List transformations for a date (defaults to today)
+  // --------------------------------------------------------------------------
+
+  async getTransformations(dateStr?: string) {
+    const targetDate = dateStr ?? todayLocal();
+    const date = parseDateOnly(targetDate);
+
+    const transformations = await this.prisma.productionTransformation.findMany({
+      where: { date },
+      orderBy: { createdAt: 'desc' },
+      select: TRANSFORMATION_DETAIL_SELECT,
+    });
+
+    return {
+      date: targetDate,
+      total: transformations.length,
+      transformations: transformations.map((t) => this.serializeTransformation(t)),
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /production/transformation/:id
+  // Get a single transformation by ID
+  // --------------------------------------------------------------------------
+
+  async getTransformationById(id: string) {
+    const transformation = await this.prisma.productionTransformation.findUnique({
+      where: { id },
+      select: TRANSFORMATION_DETAIL_SELECT,
+    });
+
+    if (!transformation) {
+      throw new NotFoundException(`Transformacion con id "${id}" no encontrada`);
+    }
+
+    return this.serializeTransformation(transformation);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /production/transformation/summary?date=YYYY-MM-DD
+  // Summary of transformations for a date
+  // --------------------------------------------------------------------------
+
+  async getTransformationSummary(dateStr?: string) {
+    const targetDate = dateStr ?? todayLocal();
+    const date = parseDateOnly(targetDate);
+
+    const transformations = await this.prisma.productionTransformation.findMany({
+      where: { date },
+      select: {
+        inputQuantity: true,
+        mermaQuantity: true,
+        mermaPercent: true,
+        inputProduct: { select: { id: true, code: true, name: true } },
+        outputs: { select: { quantity: true } },
+      },
+    });
+
+    let totalInputKg = 0;
+    let totalOutputKg = 0;
+    let totalMermaKg = 0;
+
+    const byProductMap = new Map<string, {
+      product: { id: string; code: string; name: string };
+      totalInput: number;
+      totalOutput: number;
+      totalMerma: number;
+      count: number;
+    }>();
+
+    for (const t of transformations) {
+      const input = Number(t.inputQuantity);
+      const merma = Number(t.mermaQuantity);
+      const output = t.outputs.reduce((s, o) => s + Number(o.quantity), 0);
+
+      totalInputKg += input;
+      totalOutputKg += output;
+      totalMermaKg += merma;
+
+      const pid = t.inputProduct.id;
+      if (!byProductMap.has(pid)) {
+        byProductMap.set(pid, {
+          product: t.inputProduct,
+          totalInput: 0,
+          totalOutput: 0,
+          totalMerma: 0,
+          count: 0,
+        });
+      }
+
+      const entry = byProductMap.get(pid)!;
+      entry.totalInput += input;
+      entry.totalOutput += output;
+      entry.totalMerma += merma;
+      entry.count += 1;
+    }
+
+    const avgMermaPercent = totalInputKg > 0
+      ? Number(((totalMermaKg / totalInputKg) * 100).toFixed(2))
+      : 0;
+
+    return {
+      date: targetDate,
+      totalTransformations: transformations.length,
+      totalInputKg: Number(totalInputKg.toFixed(2)),
+      totalOutputKg: Number(totalOutputKg.toFixed(2)),
+      totalMermaKg: Number(totalMermaKg.toFixed(2)),
+      avgMermaPercent,
+      byProduct: [...byProductMap.values()].map((e) => ({
+        product: e.product,
+        totalInput: Number(e.totalInput.toFixed(2)),
+        totalOutput: Number(e.totalOutput.toFixed(2)),
+        totalMerma: Number(e.totalMerma.toFixed(2)),
+        avgMermaPercent: e.totalInput > 0
+          ? Number(((e.totalMerma / e.totalInput) * 100).toFixed(2))
+          : 0,
+        count: e.count,
+      })),
+    };
+  }
+
+  // --------------------------------------------------------------------------
   // Private helpers
   // --------------------------------------------------------------------------
 
@@ -344,4 +550,99 @@ export class ProductionService {
       );
     }
   }
+
+  /**
+   * ADMIN can always transform.
+   * Other roles must be assigned to the "produccion" station.
+   */
+  private async assertUserCanTransform(userId: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        role: true,
+        stations: {
+          select: { station: { select: { name: true } } },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con id "${userId}" no encontrado`);
+    }
+
+    if (user.role === Role.ADMIN) return;
+
+    const hasProduccion = user.stations.some(
+      (us) => us.station.name.toLowerCase() === 'produccion',
+    );
+
+    if (!hasProduccion) {
+      throw new ForbiddenException(
+        'No tienes permiso para registrar transformaciones. Requiere acceso a la estacion "produccion".',
+      );
+    }
+  }
+
+  private async findAlmacenamientoStation() {
+    const station = await this.prisma.station.findFirst({
+      where: { name: { equals: 'almacenamiento', mode: 'insensitive' } },
+      select: { id: true, name: true },
+    });
+
+    if (!station) {
+      throw new NotFoundException(
+        'No se encontro la estacion "almacenamiento". Debe existir para registrar transformaciones.',
+      );
+    }
+
+    return station;
+  }
+
+  private serializeTransformation(t: {
+    id: string;
+    inputQuantity: unknown;
+    mermaQuantity: unknown;
+    mermaPercent: unknown;
+    date: unknown;
+    notes: string | null;
+    createdAt: unknown;
+    inputProduct: { id: string; code: string; name: string; unitOfMeasure: string };
+    recipe: { id: string; name: string } | null;
+    user: { id: string; name: string };
+    outputs: { id: string; quantity: unknown; outputProduct: { id: string; code: string; name: string; unitOfMeasure: string } }[];
+  }) {
+    return {
+      ...t,
+      inputQuantity: Number(t.inputQuantity),
+      mermaQuantity: Number(t.mermaQuantity),
+      mermaPercent: Number(t.mermaPercent),
+      outputs: t.outputs.map((o) => ({
+        ...o,
+        quantity: Number(o.quantity),
+      })),
+    };
+  }
 }
+
+// ---------------------------------------------------------------------------
+// Select constants
+// ---------------------------------------------------------------------------
+const TRANSFORMATION_DETAIL_SELECT = {
+  id: true,
+  inputQuantity: true,
+  mermaQuantity: true,
+  mermaPercent: true,
+  date: true,
+  notes: true,
+  createdAt: true,
+  inputProduct: { select: { id: true, code: true, name: true, unitOfMeasure: true } },
+  recipe: { select: { id: true, name: true } },
+  user: { select: { id: true, name: true } },
+  outputs: {
+    select: {
+      id: true,
+      quantity: true,
+      outputProduct: { select: { id: true, code: true, name: true, unitOfMeasure: true } },
+    },
+  },
+};
