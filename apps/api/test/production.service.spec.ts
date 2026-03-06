@@ -178,7 +178,8 @@ describe('ProductionService', () => {
 
       const result = await service.getStationLogs('st1');
 
-      expect(result.date).toBe(new Date().toISOString().slice(0, 10));
+      const todayChile = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Santiago' });
+      expect(result.date).toBe(todayChile);
     });
   });
 

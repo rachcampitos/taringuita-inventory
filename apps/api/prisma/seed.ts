@@ -200,13 +200,14 @@ async function main(): Promise<void> {
   log('Upserting stations...');
 
   const stationDefs = [
-    { id: 'sta-montaje',    name: 'montaje' },
-    { id: 'sta-frio',       name: 'frio' },
-    { id: 'sta-saltado',    name: 'saltado' },
-    { id: 'sta-plancha',    name: 'plancha' },
-    { id: 'sta-pizzeria',   name: 'pizzeria' },
-    { id: 'sta-produccion', name: 'produccion' },
-    { id: 'sta-pasteleria', name: 'pasteleria' },
+    { id: 'sta-montaje',        name: 'montaje' },
+    { id: 'sta-frio',           name: 'frio' },
+    { id: 'sta-saltado',        name: 'saltado' },
+    { id: 'sta-plancha',        name: 'plancha' },
+    { id: 'sta-pizzeria',       name: 'pizzeria' },
+    { id: 'sta-produccion',     name: 'produccion' },
+    { id: 'sta-pasteleria',     name: 'pasteleria' },
+    { id: 'sta-almacenamiento', name: 'almacenamiento' },
   ];
 
   for (const def of stationDefs) {
