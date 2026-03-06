@@ -24,6 +24,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { InventoryService } from './inventory.service';
 import { CreateInventoryCountDto } from './dto/create-inventory-count.dto';
 import { BulkInventoryCountDto } from './dto/bulk-inventory-count.dto';
+import { CreateRequisitionDto } from './dto/create-requisition.dto';
 
 @ApiTags('Inventory')
 @ApiBearerAuth()
@@ -94,6 +95,88 @@ export class InventoryController {
     @Query('date') date?: string,
   ) {
     return this.inventoryService.getDailyStatus(userId, date);
+  }
+
+  // --------------------------------------------------------------------------
+  // POST /inventory/requisition
+  // --------------------------------------------------------------------------
+
+  @Post('requisition')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Crear requisicion de productos de almacenamiento a una estacion',
+  })
+  @ApiResponse({ status: 201, description: 'Requisicion creada correctamente' })
+  @ApiResponse({ status: 403, description: 'Sin permiso para registrar en esa estacion' })
+  createRequisition(
+    @Body() dto: CreateRequisitionDto,
+    @CurrentUser('sub') userId: string,
+  ) {
+    return this.inventoryService.createRequisition(dto, userId);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /inventory/requisitions/:stationId?date=YYYY-MM-DD
+  // --------------------------------------------------------------------------
+
+  @Get('requisitions/:stationId')
+  @ApiOperation({
+    summary: 'Lista de requisiciones de una estacion para una fecha',
+  })
+  @ApiParam({ name: 'stationId', description: 'ID de la estacion' })
+  @ApiQuery({
+    name: 'date',
+    required: false,
+    example: '2025-01-15',
+    description: 'Fecha (YYYY-MM-DD). Si se omite, usa hoy.',
+  })
+  @ApiResponse({ status: 200, description: 'Lista de requisiciones' })
+  @ApiResponse({ status: 404, description: 'Estacion no encontrada' })
+  getStationRequisitions(
+    @Param('stationId') stationId: string,
+    @Query('date') date?: string,
+  ) {
+    return this.inventoryService.getStationRequisitions(stationId, date);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /inventory/requisition/summary?date=YYYY-MM-DD
+  // Must be before /requisition/:id to avoid route shadowing
+  // --------------------------------------------------------------------------
+
+  @Get('requisition/summary')
+  @ApiOperation({
+    summary: 'Resumen de requisiciones del dia agrupado por estacion (admin)',
+  })
+  @ApiQuery({
+    name: 'date',
+    required: false,
+    example: '2025-01-15',
+    description: 'Fecha (YYYY-MM-DD). Si se omite, usa hoy.',
+  })
+  @ApiResponse({ status: 200, description: 'Resumen de requisiciones' })
+  getRequisitionSummary(
+    @CurrentUser('sub') userId: string,
+    @Query('date') date?: string,
+  ) {
+    return this.inventoryService.getRequisitionSummary(userId, date);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /inventory/requisition/:id
+  // --------------------------------------------------------------------------
+
+  @Get('requisition/:id')
+  @ApiOperation({
+    summary: 'Detalle de una requisicion por ID',
+  })
+  @ApiParam({ name: 'id', description: 'ID de la requisicion' })
+  @ApiResponse({ status: 200, description: 'Detalle de la requisicion' })
+  @ApiResponse({ status: 404, description: 'Requisicion no encontrada' })
+  getRequisitionById(
+    @Param('id') id: string,
+  ) {
+    return this.inventoryService.getRequisitionById(id);
   }
 
   // --------------------------------------------------------------------------

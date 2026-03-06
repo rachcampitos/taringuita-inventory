@@ -3,10 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateInventoryCountDto } from './dto/create-inventory-count.dto';
 import { BulkInventoryCountDto } from './dto/bulk-inventory-count.dto';
+import { CreateRequisitionDto } from './dto/create-requisition.dto';
 
 // ---------------------------------------------------------------------------
 // Helper – parse date string to a Date at midnight UTC.
@@ -487,4 +488,273 @@ export class InventoryService {
       );
     }
   }
+
+  private async findAlmacenamientoStation() {
+    const station = await this.prisma.station.findFirst({
+      where: { name: { equals: 'almacenamiento', mode: 'insensitive' } },
+      select: { id: true, name: true },
+    });
+
+    if (!station) {
+      throw new NotFoundException(
+        'No se encontro la estacion "almacenamiento". Debe existir para registrar requisiciones.',
+      );
+    }
+
+    return station;
+  }
+
+  // --------------------------------------------------------------------------
+  // POST /inventory/requisition
+  // Create a requisition: move products from almacenamiento to a station
+  // --------------------------------------------------------------------------
+
+  async createRequisition(dto: CreateRequisitionDto, userId: string) {
+    await this.assertUserCanSubmitToStation(userId, dto.stationId);
+
+    const almacenamiento = await this.findAlmacenamientoStation();
+    const date = parseDateOnly(dto.date);
+
+    const result = await this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const requisition = await tx.requisition.create({
+        data: {
+          stationId: dto.stationId,
+          date,
+          notes: dto.notes,
+          userId,
+          items: {
+            create: dto.items.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+            })),
+          },
+        },
+        select: REQUISITION_DETAIL_SELECT,
+      });
+
+      for (const item of dto.items) {
+        // Decrement almacenamiento
+        const almCount = await tx.inventoryCount.findUnique({
+          where: {
+            stationId_productId_date: {
+              stationId: almacenamiento.id,
+              productId: item.productId,
+              date,
+            },
+          },
+        });
+
+        if (almCount) {
+          await tx.inventoryCount.update({
+            where: { id: almCount.id },
+            data: {
+              quantity: { decrement: item.quantity },
+              userId,
+            },
+          });
+        }
+
+        // Increment destination station
+        const stCount = await tx.inventoryCount.findUnique({
+          where: {
+            stationId_productId_date: {
+              stationId: dto.stationId,
+              productId: item.productId,
+              date,
+            },
+          },
+        });
+
+        if (stCount) {
+          await tx.inventoryCount.update({
+            where: { id: stCount.id },
+            data: {
+              quantity: { increment: item.quantity },
+              userId,
+            },
+          });
+        } else {
+          await tx.inventoryCount.create({
+            data: {
+              stationId: dto.stationId,
+              productId: item.productId,
+              quantity: item.quantity,
+              date,
+              userId,
+            },
+          });
+        }
+      }
+
+      return requisition;
+    });
+
+    return this.serializeRequisition(result);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /inventory/requisitions/:stationId?date=
+  // --------------------------------------------------------------------------
+
+  async getStationRequisitions(stationId: string, dateStr?: string) {
+    const targetDate = dateStr ?? todayLocal();
+    const date = parseDateOnly(targetDate);
+
+    const station = await this.prisma.station.findUnique({
+      where: { id: stationId },
+      select: { id: true, name: true },
+    });
+
+    if (!station) {
+      throw new NotFoundException(`Estacion con id "${stationId}" no encontrada`);
+    }
+
+    const requisitions = await this.prisma.requisition.findMany({
+      where: { stationId, date },
+      orderBy: { createdAt: 'desc' },
+      select: REQUISITION_DETAIL_SELECT,
+    });
+
+    return {
+      stationId: station.id,
+      stationName: station.name,
+      date: targetDate,
+      total: requisitions.length,
+      requisitions: requisitions.map((r) => this.serializeRequisition(r)),
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /inventory/requisition/:id
+  // --------------------------------------------------------------------------
+
+  async getRequisitionById(id: string) {
+    const requisition = await this.prisma.requisition.findUnique({
+      where: { id },
+      select: REQUISITION_DETAIL_SELECT,
+    });
+
+    if (!requisition) {
+      throw new NotFoundException(`Requisicion con id "${id}" no encontrada`);
+    }
+
+    return this.serializeRequisition(requisition);
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /inventory/requisition/summary?date=
+  // --------------------------------------------------------------------------
+
+  async getRequisitionSummary(userId: string, dateStr?: string) {
+    const targetDate = dateStr ?? todayLocal();
+    const date = parseDateOnly(targetDate);
+    const organizationId = await this.resolveOrganizationId(userId);
+
+    const requisitions = await this.prisma.requisition.findMany({
+      where: {
+        date,
+        station: { location: { organizationId } },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        stationId: true,
+        station: { select: { id: true, name: true } },
+        items: {
+          select: {
+            id: true,
+            quantity: true,
+            product: { select: { id: true, code: true, name: true, unitOfMeasure: true } },
+          },
+        },
+        user: { select: { id: true, name: true } },
+        createdAt: true,
+      },
+    });
+
+    const byStationMap = new Map<string, {
+      station: { id: string; name: string };
+      totalItems: number;
+      items: { product: { id: string; code: string; name: string; unitOfMeasure: string }; quantity: number }[];
+    }>();
+
+    for (const req of requisitions) {
+      const sid = req.stationId;
+      if (!byStationMap.has(sid)) {
+        byStationMap.set(sid, {
+          station: req.station,
+          totalItems: 0,
+          items: [],
+        });
+      }
+      const entry = byStationMap.get(sid)!;
+      for (const item of req.items) {
+        entry.totalItems += 1;
+        entry.items.push({
+          product: item.product,
+          quantity: Number(item.quantity),
+        });
+      }
+    }
+
+    const summary = [...byStationMap.values()];
+    const totalItems = summary.reduce((sum, s) => sum + s.totalItems, 0);
+
+    return {
+      date: targetDate,
+      totalStations: summary.length,
+      totalItems,
+      summary,
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // Requisition serializer
+  // --------------------------------------------------------------------------
+
+  private serializeRequisition(r: {
+    id: string;
+    date: unknown;
+    notes: string | null;
+    createdAt: unknown;
+    station: { id: string; name: string };
+    user: { id: string; name: string };
+    items: { id: string; quantity: unknown; product: { id: string; code: string; name: string; unitOfMeasure: string; category: { id: string; name: string } } }[];
+  }) {
+    return {
+      ...r,
+      items: r.items.map((item) => ({
+        ...item,
+        quantity: Number(item.quantity),
+      })),
+    };
+  }
 }
+
+// ---------------------------------------------------------------------------
+// Select constant for requisition detail queries
+// ---------------------------------------------------------------------------
+
+const REQUISITION_DETAIL_SELECT = {
+  id: true,
+  date: true,
+  notes: true,
+  createdAt: true,
+  station: { select: { id: true, name: true } },
+  user: { select: { id: true, name: true } },
+  items: {
+    select: {
+      id: true,
+      quantity: true,
+      product: {
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          unitOfMeasure: true,
+          category: { select: { id: true, name: true } },
+        },
+      },
+    },
+  },
+};

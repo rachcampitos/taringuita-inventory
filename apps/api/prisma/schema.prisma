@@ -104,6 +104,7 @@ model Station {
   productionLogs     ProductionLog[]
   stationProducts    StationProduct[]
   weeklyConsumptions WeeklyConsumption[]
+  requisitions       Requisition[]
 
   @@map("stations")
 }
@@ -138,6 +139,7 @@ model User {
   productionLogs  ProductionLog[]
   generatedOrders OrderRequest[]
   transformations ProductionTransformation[] @relation("TransformationUser")
+  requisitions    Requisition[] @relation("RequisitionUser")
 
   @@map("users")
 }
@@ -184,6 +186,7 @@ model Product {
   orderItems               OrderItem[]
   transformationsAsInput   ProductionTransformation[] @relation("TransformationInput")
   transformationsAsOutput  TransformationOutput[]     @relation("TransformationOutput")
+  requisitionItems         RequisitionItem[]
 
   @@map("products")
 }
@@ -378,4 +381,32 @@ model TransformationOutput {
 
   @@index([transformationId])
   @@map("transformation_outputs")
+}
+
+model Requisition {
+  id        String   @id @default(cuid())
+  stationId String
+  station   Station  @relation(fields: [stationId], references: [id])
+  date      DateTime @db.Date
+  notes     String?
+  userId    String
+  user      User     @relation("RequisitionUser", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  items     RequisitionItem[]
+
+  @@index([stationId, date])
+  @@index([date])
+  @@map("requisitions")
+}
+
+model RequisitionItem {
+  id            String      @id @default(cuid())
+  requisitionId String
+  requisition   Requisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product     @relation(fields: [productId], references: [id])
+  quantity      Decimal     @db.Decimal(10, 2)
+
+  @@index([requisitionId])
+  @@map("requisition_items")
 }

@@ -1,8 +1,9 @@
 const DB_NAME = "taringuita-offline";
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const INVENTORY_STORE = "inventory-counts";
 const PRODUCTION_STORE = "production-logs";
 const TRANSFORMATION_STORE = "transformation-queue";
+const REQUISITION_STORE = "requisition-queue";
 
 interface QueuedCount {
   id?: number;
@@ -31,6 +32,15 @@ interface QueuedTransformation {
   createdAt: string;
 }
 
+interface QueuedRequisition {
+  id?: number;
+  stationId: string;
+  date: string;
+  items: { productId: string; quantity: number }[];
+  notes?: string;
+  createdAt: string;
+}
+
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -51,6 +61,12 @@ function openDB(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains(TRANSFORMATION_STORE)) {
         db.createObjectStore(TRANSFORMATION_STORE, {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+      }
+      if (!db.objectStoreNames.contains(REQUISITION_STORE)) {
+        db.createObjectStore(REQUISITION_STORE, {
           keyPath: "id",
           autoIncrement: true,
         });
@@ -251,14 +267,74 @@ export async function getTransformationQueueCount(): Promise<number> {
 }
 
 // ---------------------------------------------------------------------------
+// Requisition queue
+// ---------------------------------------------------------------------------
+
+export async function queueRequisition(
+  stationId: string,
+  date: string,
+  items: { productId: string; quantity: number }[],
+  notes?: string
+): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(REQUISITION_STORE, "readwrite");
+    const store = tx.objectStore(REQUISITION_STORE);
+    store.add({
+      stationId,
+      date,
+      items,
+      notes,
+      createdAt: new Date().toISOString(),
+    } satisfies Omit<QueuedRequisition, "id">);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function getRequisitionQueue(): Promise<QueuedRequisition[]> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(REQUISITION_STORE, "readonly");
+    const store = tx.objectStore(REQUISITION_STORE);
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function deleteRequisitionEntry(id: number): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(REQUISITION_STORE, "readwrite");
+    const store = tx.objectStore(REQUISITION_STORE);
+    store.delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function getRequisitionQueueCount(): Promise<number> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(REQUISITION_STORE, "readonly");
+    const store = tx.objectStore(REQUISITION_STORE);
+    const request = store.count();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Combined counts
 // ---------------------------------------------------------------------------
 
 export async function getTotalQueueCount(): Promise<number> {
-  const [inv, prod, trans] = await Promise.all([
+  const [inv, prod, trans, req] = await Promise.all([
     getQueueCount(),
     getProductionQueueCount(),
     getTransformationQueueCount(),
+    getRequisitionQueueCount(),
   ]);
-  return inv + prod + trans;
+  return inv + prod + trans + req;
 }
